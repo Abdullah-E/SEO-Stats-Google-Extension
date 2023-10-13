@@ -9,23 +9,23 @@
         if (type === "NEW") {
             searchQuery = searchWord;
             console.log(searchWord);
-            document.addEventListener('DOMContentLoaded', function () {
-                getTextBox();
-            })
+            getTextBox();
+
         }
     });
 
     const getTextBox = () => {
 
-        TextBox = document.getElementById("#result-stats");
-        
-        if(TextBox){
-            console.log("Found TextBox");
-            
-        }else{
-            console.log("TextBox not found");
-        }
-        // console.log("result-stats",TextBox.innerText);
+        document.addEventListener("DOMContentLoaded", function () {
+            TextBox = document.getElementById("result-stats")
+            if(TextBox){
+                console.log("Found TextBox", TextBox.innerText);
+                TextBox.innerText = "volume \n" + TextBox.innerText;
+                
+            }else{
+                console.log("TextBox not found");
+            }
+        })
     };
 
 })();
