@@ -4,23 +4,25 @@
     
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log("Listnere")
-        const { type, searchWord } = request;
+        const { type, searchWord , wordVolume} = request;
 
         if (type === "NEW") {
             searchQuery = searchWord;
-            console.log(searchWord);
-            getTextBox();
+            searchVolume = wordVolume;
+            console.log(searchWord, wordVolume);
+            getTextBox(wordVolume);
 
         }
     });
 
-    const getTextBox = () => {
-
+    const getTextBox = (volume) => {
+        console.log("getTextBox", volume)
         document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOMContentLoaded")
             TextBox = document.getElementById("result-stats")
             if(TextBox){
                 console.log("Found TextBox", TextBox.innerText);
-                TextBox.innerText = "volume \n" + TextBox.innerText;
+                TextBox.innerText = "Volume: "  + volume + " " + TextBox.innerText;
                 
             }else{
                 console.log("TextBox not found");
