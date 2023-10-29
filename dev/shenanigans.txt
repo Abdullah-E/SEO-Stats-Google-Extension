@@ -1,0 +1,5 @@
+document.getElementById("ChartContainer").style.position = "fixed"
+document.getElementById("ChartContainer").style.top = "150px"
+document.getElementById("ChartContainer").style.right = "300px"
+document.getElementById("ChartContainer").style.width = "300px"
+document.getElementById("ChartContainer").style.height = "300px"
