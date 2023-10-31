@@ -1,7 +1,7 @@
 {
-	"name": "SEO Google Integration",
-	"version": "0.1.0",
-	"description": "Showing SEO stats in Google search results",
+	"name": "Arabic SEO Google Integration",
+	"version": "1.0.0",
+	"description": "Showing SEO stats in Google search results for arabic words",
 	"permissions": ["storage", "tabs", "activeTab"],
 	"host_permissions": ["<all_urls>"],
 	"background": {
@@ -9,7 +9,7 @@
 	},
 	"web_accessible_resources": [
 			{
-					"resources": ["lib/chart.js", "chart.css"],
+					"resources": ["lib/chart.js"],
 					"matches": ["<all_urls>"]
 			}
 	],
@@ -21,7 +21,7 @@
 			}
 	],
 	"action": {
-			"default_title": "My YT Bookmarks",
+			"default_title": "Arabic SEO Google Integration",
 			"default_popup": "popup.html"
 	},
 	
