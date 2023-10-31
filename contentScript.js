@@ -11,8 +11,8 @@
             // getTextBox(wordVolume);
             
             // Add the API request logic here
-            const apiLogin = 'kodiya1583@qianhost.com'
-            const apiPassword = 'd45e32634fdac71c'
+            const apiLogin = 'iskandarth3@gmail.com'
+            const apiPassword = 'cca345191c5d83c5'
 
             // const apiUrl = "https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/live";
 
@@ -47,13 +47,101 @@
                         return
                     }
                     if (TextBox && data.tasks[0].result[0]) {
-                        TextBox.innerText = `Volume: ${data.tasks[0].result[0].search_volume}`
+                        TextBox.innerText = `Volume: ${data.tasks[0].result[0].search_volume}/mo`
 
 
                     }
-                    makeChart(data)
+                    const monthly_data = data
+                    // document.addEventListener('DOMContentLoaded', function () {
+                    //iframe stuff:
+                    const iframe = document.createElement('iframe')
+                    iframe.id = "chart-iframe"
+                    document.body.appendChild(iframe)
 
+                    // const iframeStyle = document.createElement('style')
+                    // iframeStyle.textContent = chartStyleStr
+                    // iframe.contentDocument.head.appendChild(iframeStyle)
                     
+                    //script stuff:
+                    const chartScript = document.createElement('script')
+                    chartScript.src = chrome.runtime.getURL('lib/chart.js')
+                    chartScript.type = 'text/javascript'
+                    
+                    //canvas stuff:
+                    const chartContainer = document.createElement("canvas")
+                    chartContainer.id = "ChartContainer"
+            
+                    const iframeStyle = document.createElement("style")
+                    iframeStyle.textContent = chartStyleStrNew
+                    
+                    chartContainer.appendChild(chartScript)
+                    document.body.appendChild(chartContainer)
+                    
+                    iframe.contentDocument.body.appendChild(chartContainer)
+                    
+                    document.body.appendChild(iframeStyle)
+                    
+                    /*
+                    const chartStyle = document.createElement("style")
+                    chartStyle.textContent = chartStyleStr
+                    iframe.contentDocument.body.appendChild(chartStyle)
+                    */
+                    // chartScript.onload = function () {
+                        console.log("chart script loaded")
+                        const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
+                        const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
+                        const my_vols = monthlySearches.map(item => item.search_volume)
+                        my_vols.reverse()
+                        my_labels.reverse()
+            
+                        const ctx = iframe.contentDocument.getElementById('ChartContainer').getContext('2d')
+                        
+                        avg_vols = data_to_running_avg(my_vols)
+                        
+                        const myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: my_labels,
+                                datasets: [{
+                                label: 'Monthly Volume',
+                                data: my_vols,
+                                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 0,
+                                barPercentage: 1.25,
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                },
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks:{
+                                            font:{
+                                                size: 20,
+                                                weight: 900,
+                    
+                                            },
+                                        }
+                                    }
+                                },
+                                layout: {
+                                padding: {
+                                    top: 10, // Adjust the top padding
+                                }
+                                },
+                                maintainAspectRatio: false, // Allow the chart to adjust its aspect ratio
+                                aspectRatio: 1, // Set the desired aspect ratio
+                                responsive: true
+                            }
+                        })
+                    // }
+                    console.log("after")
                 })
                 .then(()=>{
                     const cpcReqData = makeRequestData(searchQuery, "CPC");
@@ -73,7 +161,11 @@
                         TextBox = document.getElementById("result-stats")
 
                         if (TextBox && cpc_data?.tasks?.[0]?.result?.[0]?.items?.[0]?.keyword_info) {
-                            TextBox.innerText = `CPC: ${cpc_data.tasks[0].result[0].items[0].keyword_info.cpc} | ${TextBox.innerText}`
+                            const result_obj = cpc_data.tasks[0].result[0].items[0].keyword_info
+                            const cpc = result_obj.cpc
+                            const competition = result_obj.competition
+
+                            TextBox.innerText = `${TextBox.innerText} | CPC: $${cpc} | Competition: ${competition}`
                         }else{
                             console.log("CPC request unsuccessful, missing info")
                         }
@@ -85,90 +177,6 @@
                     console.error("API Request Failed in contentScript.js:", error)
                 })
 
-                //Creating chart using sample data (API FUCK):
-                // document.addEventListener('DOMContentLoaded', function () {
-                //     const iframe = document.createElement('iframe')
-                //     iframe.id = "chartIframe"
-                //     iframe.style.position = "fixed"
-                //     iframe.style.top = "150px"
-                //     iframe.style.right = "300px"
-                //     iframe.style.width = "500px"
-                //     iframe.style.margin = "auto"
-                //     iframe.style.height = "300px"
-                //     document.body.appendChild(iframe)
-    
-                //     const chartScript = document.createElement('script')
-                //     chartScript.src = chrome.runtime.getURL('lib/chart.js')
-                //     chartScript.type = 'text/javascript'
-    
-                //     const chartContainer = document.createElement("canvas")
-                //     chartContainer.id = "ChartContainer"
-    
-                //     const chartStyle = document.createElement("style")
-                //     chartStyle.textContent = chartStyleStr
-                    
-                //     chartContainer.appendChild(chartScript)
-                //     // document.body.appendChild(chartContainer)
-                //     iframe.contentDocument.body.appendChild(chartContainer)
-                    
-    
-                //     chartScript.onload = function () {
-                //         const monthlySearches = vol_data.tasks[0].result[0].monthly_searches;
-                //         const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
-                //         const my_vols = monthlySearches.map(item => item.search_volume)
-    
-                //         const ctx = iframe.contentDocument.getElementById('ChartContainer').getContext('2d')
-                        
-    
-                        
-                //         const myChart = new Chart(ctx, {
-                //             type: 'bar',
-                //             data: {
-                //               labels: my_labels,
-                //               datasets: [{
-                //                 label: 'Monthly Searches',
-                //                 data: my_vols,
-                //                 backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                //                 borderColor: 'rgba(75, 192, 192, 1)',
-                //                 borderWidth: 0,
-                //                 barPercentage: 1.25,
-                //               }]
-                //             },
-                //             options: {
-                //               plugins: {
-                //                 legend: {
-                //                   display: true,
-                //                   position: 'top',
-                //                 },
-                //               },
-                //               scales: {
-                //                 y: {
-                //                   beginAtZero: true,
-                //                   ticks:{
-                //                     font:{
-                //                         size: 20,
-                //                         weight: 900,
-    
-                //                     },
-                //                     // textStrokeWidth: 1,
-                //                     // textStrokeColor: 'rgba(255, 255,255, 1)',
-                //                 }
-                //                 }
-                //               },
-                //               layout: {
-                //                 padding: {
-                //                   top: 10, // Adjust the top padding
-                //                 }
-                //               },
-                //               maintainAspectRatio: false, // Allow the chart to adjust its aspect ratio
-                //               aspectRatio: 1, // Set the desired aspect ratio
-                //               responsive: true
-                //             }
-                //           })
-                //         // iframe.contentDocument.head.appendChild(chartStyle);
-                //     }
-                // })
-                
 
                 
 
@@ -177,18 +185,67 @@
 
     
 })()
+const size_factor = 1
+
+// const chartStylePrev = `
+// #ChartContainer{
+//     width: ${size_factor * 100}% !important;
+//     height: ${size_factor * 100}% !important;
+//     position: relative !important;
+//     right: 0 !important;
+//     top: 150px !important;
+    
+// }
+// `
+
+const data_to_running_avg = (data) => {
+    let sum = 0
+    let count = 0
+    let running_avg = []
+    for (let i = 0; i < data.length; i++) {
+        sum += data[i]
+        count++
+        running_avg.push(sum / count)
+    }
+    return running_avg
+}
+const chartStyleStr = `
+#ChartContainer {
+    width: ${size_factor * 100}% !important;
+    height: ${size_factor * 100}% !important;
+    margin:auto !important;
+    
+}
+`
+
+const chartStyleStrNew = `
+    #chart-iframe {
+        position: absolute !important;
+        top: 175px !important; 
+        right: 50px !important;
+        width: 500px !important;
+        height: 350px !important;
+
+    }
+    
+`
+/*
+#chart-iframe{
+    position: absolute !important;
+    top: 150px !important;
+    right: 0 !important;
+    width: ${size_factor * 100}% !important;
+    height: ${size_factor * 100}% !important;
+}
+*/
+
+
 
 
 const makeChart = (monthly_data) =>{
+    console.log("making chart", monthly_data)
     document.addEventListener('DOMContentLoaded', function () {
         const iframe = document.createElement('iframe')
-        iframe.id = "chartIframe"
-        iframe.style.position = "fixed"
-        iframe.style.top = "150px"
-        iframe.style.right = "300px"
-        iframe.style.width = "500px"
-        iframe.style.margin = "auto"
-        iframe.style.height = "300px"
         document.body.appendChild(iframe)
 
         const chartScript = document.createElement('script')
@@ -207,6 +264,7 @@ const makeChart = (monthly_data) =>{
         
 
         chartScript.onload = function () {
+            console.log("chart script loaded")
             const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
             const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
             const my_vols = monthlySearches.map(item => item.search_volume)
@@ -265,6 +323,7 @@ const makeChart = (monthly_data) =>{
 
 }
 
+
 const makeRequestData = (keyword, req_type) => {
     switch (req_type) {
         case "SEARCH_VOLUME":
@@ -304,19 +363,6 @@ const getTextBox = (volume) => {
         }
     })
 }
-
-const size_factor = 1
-const chartStyleStr = `
-
-#ChartContainer{
-    position: fixed !important;
-    top: 150px !important;
-    width: ${size_factor*100}% !important;
-    height: ${size_factor*100}% !important;
-    left: 50% !important;
-    
-}
-`
 
 
 const cpc_data = {
