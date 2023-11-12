@@ -1,7 +1,7 @@
 {
-	"name": "Arabic SEO Google Integration",
-	"version": "1.0.0",
-	"description": "Showing SEO stats in Google search results for arabic words",
+	"name": "Kalimat",
+	"version": "1.1.0",
+	"description": "Arabic Keywords Tool",
 	"permissions": ["storage", "tabs", "activeTab"],
 	"host_permissions": ["<all_urls>"],
 	"background": {
@@ -21,7 +21,13 @@
 			}
 	],
 	"action": {
-			"default_title": "Arabic SEO Google Integration",
+			"default_icon": {
+				"16":"assets/Kalimat_icon.png",
+				"24":"assets/Kalimat_icon.png",
+				"32":"assets/Kalimat_icon.png",
+				"48":"assets/Kalimat_icon.png"
+			},
+			"default_title": "Kalimat",
 			"default_popup": "popup.html"
 	},
 	
