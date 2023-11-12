@@ -3,7 +3,7 @@
     let searchQuery, TextBox;
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        const { type, searchWord } = request;
+        const { type, searchWord, extensionState } = request;
 
         if (type === "SEARCH_WORD") {
             searchQuery = searchWord
@@ -41,80 +41,9 @@
 
 
                 }
-                const monthly_data = data
-
-                const iframe = document.createElement('iframe')
-                iframe.id = "chart-iframe"
-                document.body.appendChild(iframe)
-
-                const chartScript = document.createElement('script')
-                chartScript.src = chrome.runtime.getURL('lib/chart.js')
-                chartScript.type = 'text/javascript'
-                
-                const chartContainer = document.createElement("canvas")
-                chartContainer.id = "ChartContainer"
-        
-                const iframeStyle = document.createElement("style")
-                iframeStyle.textContent = chartStyleStrNew
-                
-                chartContainer.appendChild(chartScript)
-                document.body.appendChild(chartContainer)
-                
-                iframe.contentDocument.body.appendChild(chartContainer)
-                
-                document.body.appendChild(iframeStyle)
-                
-
-                const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
-                const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
-                const my_vols = monthlySearches.map(item => item.search_volume)
-                my_vols.reverse()
-                my_labels.reverse()
-    
-                const ctx = iframe.contentDocument.getElementById('ChartContainer').getContext('2d')
-                                    
-                const myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: my_labels,
-                        datasets: [{
-                        label: 'Monthly Volume',
-                        data: my_vols,
-                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 0,
-                        barPercentage: 1.25,
-                        }]
-                    },
-                    options: {
-                        plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                        },
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks:{
-                                    font:{
-                                        size: 20,
-                                        weight: 900,
-            
-                                    },
-                                }
-                            }
-                        },
-                        layout: {
-                        padding: {
-                            top: 10, 
-                        }
-                        },
-                        maintainAspectRatio: false, 
-                        aspectRatio: 1, 
-                        responsive: true
-                    }
-                })
+                if(extensionState.chart_enable){
+                    makeChart(data)
+                }
             })
             .then(()=>{
                 const cpcReqData = makeRequestData(searchQuery, "CPC");
@@ -147,7 +76,9 @@
             })
 
             //keywordsReqAndTable(searchQuery)
-            
+            if(!extensionState.word_list_enable){
+                return
+            }
             const k4kReqData = makeRequestData(searchQuery, "SUGGESTED_KEYWORDS")
             const k4kReqObj = {
                 method: 'POST',
@@ -254,6 +185,82 @@ const makeRequestData = (keyword, req_type) => {
                 }
             ];
     }
+}
+
+const makeChart = (monthly_data) => {
+
+    const iframe = document.createElement('iframe')
+    iframe.id = "chart-iframe"
+    document.body.appendChild(iframe)
+
+    const chartScript = document.createElement('script')
+    chartScript.src = chrome.runtime.getURL('lib/chart.js')
+    chartScript.type = 'text/javascript'
+    
+    const chartContainer = document.createElement("canvas")
+    chartContainer.id = "ChartContainer"
+
+    const iframeStyle = document.createElement("style")
+    iframeStyle.textContent = chartStyleStrNew
+    
+    chartContainer.appendChild(chartScript)
+    document.body.appendChild(chartContainer)
+    
+    iframe.contentDocument.body.appendChild(chartContainer)
+    
+    document.body.appendChild(iframeStyle)
+    
+
+    const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
+    const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
+    const my_vols = monthlySearches.map(item => item.search_volume)
+    my_vols.reverse()
+    my_labels.reverse()
+
+    const ctx = iframe.contentDocument.getElementById('ChartContainer').getContext('2d')
+                        
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: my_labels,
+            datasets: [{
+            label: 'Monthly Volume',
+            data: my_vols,
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 0,
+            barPercentage: 1.25,
+            }]
+        },
+        options: {
+            plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+            },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks:{
+                        font:{
+                            size: 20,
+                            weight: 900,
+
+                        },
+                    }
+                }
+            },
+            layout: {
+            padding: {
+                top: 10, 
+            }
+            },
+            maintainAspectRatio: false, 
+            aspectRatio: 1, 
+            responsive: true
+        }
+    })
 }
 
 const makeKeywordTable = (resultsArr) => {

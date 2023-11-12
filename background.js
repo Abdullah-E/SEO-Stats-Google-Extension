@@ -37,6 +37,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
     chrome.tabs.sendMessage(tabId, {
       type: "SEARCH_WORD",
       searchWord: searchWord,
+      extensionState: extensionState
     })
   }
 })
