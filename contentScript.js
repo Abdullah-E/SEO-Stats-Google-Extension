@@ -114,18 +114,9 @@
     
     
 })()
-const size_factor = 1
 
 
-// const chartStyleStr = `
-// #ChartContainer {
-//     width: ${size_factor * 100}% !important;
-//     height: ${size_factor * 100}% !important;
-//     margin:auto !important;
-    
-// }
-// `
-
+/*
 const chartStyleStrNew = `
     #chart-iframe {
         position: absolute !important;
@@ -136,14 +127,25 @@ const chartStyleStrNew = `
 
     }
 `
+*/
 
+const chartStyleStrNew = `
+    #chart-iframe {
+        position: absolute !important;
+        top: 175px !important;
+        right: 25px !important;
+        width: 420px !important;
+        height: 350px !important;
+    }`
 const tableStyleStr = `
     #related-words-table {
         position: absolute !important;
-            top: 575px !important; 
-            right: 50px !important;
-            width: 500px !important;
-            height: 350px !important;
+        background-color: white !important;
+        color: black !important;
+        top: 575px !important; 
+        right: 25px !important;
+        width: 420px !important;
+        height: 350px !important;
     }
 `
 
@@ -210,7 +212,6 @@ const makeChart = (monthly_data) => {
     
     document.body.appendChild(iframeStyle)
     
-
     const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
     const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
     const my_vols = monthlySearches.map(item => item.search_volume)
@@ -218,7 +219,7 @@ const makeChart = (monthly_data) => {
     my_labels.reverse()
 
     const ctx = iframe.contentDocument.getElementById('ChartContainer').getContext('2d')
-                        
+    const labelSize = 12
     const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -244,7 +245,16 @@ const makeChart = (monthly_data) => {
                     beginAtZero: true,
                     ticks:{
                         font:{
-                            size: 20,
+                            size: labelSize,
+                            weight: 900,
+
+                        },
+                    }
+                },
+                x: {
+                    ticks:{
+                        font:{
+                            size: labelSize,
                             weight: 900,
 
                         },
@@ -270,7 +280,7 @@ const makeKeywordTable = (resultsArr) => {
 
     const table = document.createElement("table")
     table.id = "related-words-table"
-    // table.style = "width:100%"
+
     const tableStyle = document.createElement("style")
     tableStyle.textContent = tableStyleStr
     document.body.appendChild(tableStyle)
@@ -313,10 +323,6 @@ const keywordsReqAndTable = async (keyword) => {
         if(data?.tasks?.[0]?.result ){
             const results = data.tasks[0].result
             const keywords = results.map(item => item.keyword)
-            // const volumes = results.map(item => item.search_volume)
-            // const competitions = results.map(item => item.competition)
-            
-            //make a table
             
             const keywordsTable = makeKeywordTable(results)
             document.body.appendChild(keywordsTable)
