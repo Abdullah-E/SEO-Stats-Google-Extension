@@ -26,53 +26,38 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
   let enableExtension = extensionState.global_enable
   console.log("Tab updated: ", enableExtension)
-  if (tab.url && tab.url.includes("google.com/search") && enableExtension) {
+  if(!enableExtension){
+    return
+  }
+  if (tab.url && tab.url.includes("google.com/search")) {
     console.log("We in here")
-    const queryParameters = tab.url.split("?")[1]
-    const urlParameters = new URLSearchParams(queryParameters)
-    const searchWord = urlParameters.get("q")
+    // const queryParameters = tab.url.split("?")[1]
+    // const urlParameters = new URLSearchParams(queryParameters)
+    const searchWord = getSearchWord(tab.url, "q")
 
     console.log("Search word: ",searchWord)
 
     chrome.tabs.sendMessage(tabId, {
-      type: "SEARCH_WORD",
+      type: "GOOGLE_SEARCH",
       searchWord: searchWord,
       extensionState: extensionState
     })
   }
-})
-
-/*
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("Message received: ", message)
-  switch (message.type) {
-    case "REQ_STATE":
-      console.log("Sending state: ", extensionState)
-      chrome.runtime.sendMessage({
-        type: "RES_STATE",
-        extensionState: extensionState,
-      })
-      break
-    default:
-      break
-  }
-
-    
-  // if(message.type == "EXTENSION_TOGGLE"){
-  //   extensionState = message.extensionState;
-  //   console.log("Extension is now: ", extensionState)
-  // }
-
-})
-
-*/
-/*
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("Message received: ", message)
-  if(message.type == "EXTENSION_TOGGLE"){
-    enableExtension = message.enableExtension;
-    console.log("Extension is now: ", enableExtension)
+  if(tab.url && tab.url.includes("https://www.amazon.com/s")){
+    const searchWord = getSearchWord(tab.url, "k")
+    console.log("Search word: ",searchWord)
+    chrome.tabs.sendMessage(tabId, {
+      type: "AMAZON_SEARCH",
+      searchWord: searchWord,
+      extensionState: extensionState
+    })
   }
 
 })
-*/
+
+const getSearchWord = (url, key) => {
+  const queryParameters = url.split("?")[1]
+  const urlParameters = new URLSearchParams(queryParameters)
+  const searchWord = urlParameters.get(key)
+  return searchWord
+}

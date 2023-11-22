@@ -1,114 +1,68 @@
 (() => {
     console.log("SEO Arabic Extension Initiated")
-    let searchQuery, TextBox;
-
+    // let searchQuery, TextBox;
+    let received = false
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if(received){
+            return
+        }
+        received = true
         const { type, searchWord, extensionState } = request;
-
-        if (type === "SEARCH_WORD") {
-            searchQuery = searchWord
-
-            const apiLogin = 'iskandarth3@gmail.com'
-            const apiPassword = 'cca345191c5d83c5'
-
+        const apiLogin = 'iskandarth3@gmail.com'
+        const apiPassword = 'cca345191c5d83c5'
+        if (type === "GOOGLE_SEARCH") {
+            // searchQuery = searchWord
             const headers = new Headers({
-                'Authorization': 'Basic ' + btoa(apiLogin + ':' + apiPassword),
+                'Authorization': 'Basic ' + btoa(apiLogin + ':' + apiPassword), 
                 'Content-Type': 'application/json',
-            });
+            })
+           
 
-            const volReqData = makeRequestData(searchQuery, "SEARCH_VOLUME")
-
-            const requestObj = {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(volReqData),
+            if(!(extensionState.stats_enable || extensionState.chart_enable)){
+                return
             }
-            const volumeRequest = new Request("https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/live", requestObj)
-            
-            
-            fetch(volumeRequest)
-            .then(response => response.json())
-            .then(data => {
-    
-                TextBox = document.getElementById("result-stats")
-
-                if(!(data && data.tasks && data.tasks[0] && data.tasks[0].result && data.tasks[0].result[0] && data.tasks[0].result[0].search_volume) ){
-                    console.log("Volume request unsuccessful, missing info")
+            volumeCPCReq(searchWord, headers).then((stats) => {
+                if(stats.length() == 0){
+                    console.log("No stats")
                     return
                 }
-                if (TextBox && data.tasks[0].result[0]) {
-                    TextBox.innerText = `Volume: ${data.tasks[0].result[0].search_volume}/mo`
-
-
-                }
                 if(extensionState.chart_enable){
-                    makeChart(data)
+                    makeChart(stats.monthly_searches)
                 }
-            })
-            .then(()=>{
-                const cpcReqData = makeRequestData(searchQuery, "CPC");
-                const cpcReqObj = {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify(cpcReqData),
+                if(extensionState.stats_enable){
+                    makeTextBox(stats)
                 }
-                const cpcRequest = new Request("https://api.dataforseo.com/v3/dataforseo_labs/google/historical_search_volume/live", cpcReqObj);
-                fetch(cpcRequest)
-                .then(response => response.json())
-                .then(cpc_data => {
-                    TextBox = document.getElementById("result-stats")
-
-                    if (TextBox && cpc_data?.tasks?.[0]?.result?.[0]?.items?.[0]?.keyword_info) {
-                        const result_obj = cpc_data.tasks[0].result[0].items[0].keyword_info
-                        const cpc = result_obj.cpc
-                        const competition = result_obj.competition
-
-                        TextBox.innerText = `${TextBox.innerText} | CPC: $${cpc} | Competition: ${competition}`
-                    }else{
-                        console.log("CPC request unsuccessful, missing info")
-                    }
-
-                    
-                })
+                
             })
-            .catch(error => {
-                console.error("API Request Failed in contentScript.js:", error)
-            })
-
             //keywordsReqAndTable(searchQuery)
             if(!extensionState.word_list_enable){
                 return
             }
-            const k4kReqData = makeRequestData(searchQuery, "SUGGESTED_KEYWORDS")
-            const k4kReqObj = {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(k4kReqData),
-            }
-            // console.log("req obj:", k4kReqData)
-            const k4kRequest = new Request("https://api.dataforseo.com/v3/keywords_data/google/keywords_for_keywords/live", k4kReqObj)
-            fetch(k4kRequest)
-            .then(response => response.json())
-            .then(data => {
-                if(data?.tasks?.[0]?.result ){
-                    const results = data.tasks[0].result
-                    const keywords = results.map(item => item.keyword)
-                    // const volumes = results.map(item => item.search_volume)
-                    // const competitions = results.map(item => item.competition)
-                    
-                    //make a table
-                    
-                    const keywordsTable = makeKeywordTable(results)
-                    document.body.appendChild(keywordsTable)
-                    console.log("Related words:", keywords)
-                }else{
-                    console.log("Related words request unsuccessful, missing info")
-                }
+            keywordsReqAndTable(searchWord, headers).then(() => {
+                console.log("Related words request successful")
             })
-            .catch(error => {
-                console.error("API Request Failed in contentScript.js:", error)
+        }
+        else if(type == "AMAZON_SEARCH"){
+            const headers = new Headers({
+                'Authorization': 'Basic ' + btoa(apiLogin + ':' + apiPassword), 
+                'Content-Type': 'application/json',
+            })
+            console.log("Amazon search", searchWord)
+            volumeCPCReq(searchWord, headers)
+            .then((stats) => {
+                console.log("Stats:", stats)
+                console.log("Stats length:", Object.keys(stats).length)
+                // const textBox = document.getElementsByClassName("a-section a-spacing-small a-spacing-top-small")
+                const textBox = document.querySelector("#search > span:nth-child(9) > div > h1 > div > div.sg-col-14-of-20.sg-col-18-of-24.sg-col.s-breadcrumb.sg-col-10-of-16.sg-col-6-of-12 > div > div")
+                
+                // const textBox = document.querySelector("a-section a-spacing-small a-spacing-top-small")
+                console.log("Text box:", textBox)
+            })
+            .catch((error) => {
+                console.log("Error:", error)
             })
             
+
         }
     })
     
@@ -212,9 +166,10 @@ const makeChart = (monthly_data) => {
     
     document.body.appendChild(iframeStyle)
     
-    const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
-    const my_labels = monthlySearches.map(item => `${item.year}-${item.month}`)
-    const my_vols = monthlySearches.map(item => item.search_volume)
+    // const monthlySearches = monthly_data.tasks[0].result[0].monthly_searches;
+    console.log("Monthly data:", monthly_data)
+    const my_labels = monthly_data.map(item => `${item.year}-${item.month}`)
+    const my_vols = monthly_data.map(item => item.search_volume)
     my_vols.reverse()
     my_labels.reverse()
 
@@ -308,7 +263,52 @@ const makeKeywordTable = (resultsArr) => {
     return table
 }
 
-const keywordsReqAndTable = async (keyword) => {
+const volumeCPCReq = async (keyword, headers) => {
+    let stats = {}
+    try{
+        const volReqData = makeRequestData(keyword, "SEARCH_VOLUME")
+        const volReqObj = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(volReqData),
+        }
+        const volumeRequest = new Request("https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/live", volReqObj)
+        const volRes = await fetch(volumeRequest)
+        // console.log("Volume response:", volRes)
+        const volData = await volRes.json()
+        console.log("Volume data:", volData)
+        if(volData?.tasks?.[0]?.result?.[0]?.search_volume){
+            stats.volume = volData.tasks[0].result[0].search_volume
+        }
+        if(volData?.tasks?.[0]?.result?.[0]?.monthly_searches){
+            stats.monthly_searches = volData.tasks[0].result[0].monthly_searches
+        }
+        
+
+        const cpcReqData = makeRequestData(keyword, "CPC");
+        const cpcReqObj = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(cpcReqData),
+        }
+        const cpcRequest = new Request("https://api.dataforseo.com/v3/dataforseo_labs/google/historical_search_volume/live", cpcReqObj);
+        const cpcRes = await fetch(cpcRequest)
+        const cpcData = await cpcRes.json()
+        if(cpcData?.tasks?.[0]?.result?.[0]?.items?.[0]?.keyword_info){
+            const result_obj = cpcData.tasks[0].result[0].items[0].keyword_info
+            const cpc = result_obj.cpc
+            const competition = result_obj.competition
+            if(cpc)stats.cpc = cpc
+            if(competition)stats.competition = competition
+        }
+        return stats
+    }catch(error){
+        console.error("API Request Failed in contentScript.js:", error)
+    }
+}
+
+const keywordsReqAndTable = async (keyword, headers) => {
+    console.log("Keyword:", keyword)
     const k4kReqData = makeRequestData(keyword, "SUGGESTED_KEYWORDS")
     const k4kReqObj = {
         method: 'POST',
@@ -334,6 +334,20 @@ const keywordsReqAndTable = async (keyword) => {
     .catch(error => {
         console.error("API Request Failed in contentScript.js:", error)
     })
+}
+const makeTextBox = (stats) => {
+    textBox = document.getElementById("result-stats")
+    textBox.innerText = ""
+    if(stats.volume){
+        textBox.innerText = "Volume: " + stats.volume
+    }
+    if(stats.cpc){
+        textBox.innerText = textBox.innerText + " | CPC: " + stats.cpc
+    }
+    if(stats.competition){
+        textBox.innerText = textBox.innerText + " | Competition: " + stats.competition
+    }
+    return textBox
 }
 
 const getTextBox = (volume) => {

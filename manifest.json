@@ -10,12 +10,12 @@
 	"web_accessible_resources": [
 			{
 					"resources": ["lib/chart.js"],
-					"matches": ["<all_urls>"]
+					"matches": ["https://*.google.com/*", "https://*.amazon.com/*"]
 			}
 	],
 	"content_scripts": [
 			{
-					"matches": ["<all_urls>"],
+				"matches": ["https://*.google.com/*", "https://*.amazon.com/*"],
 					"js": ["lib/chart.js","contentScript.js"],
 					"run_at": "document_start"
 			}
