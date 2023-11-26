@@ -22,10 +22,7 @@
                 return
             }
             volumeCPCReq(searchWord, headers).then((stats) => {
-                if(stats.length() == 0){
-                    console.log("No stats")
-                    return
-                }
+                
                 if(extensionState.chart_enable){
                     makeChart(stats.monthly_searches)
                 }
@@ -54,7 +51,19 @@
                 console.log("Stats length:", Object.keys(stats).length)
                 // const textBox = document.getElementsByClassName("a-section a-spacing-small a-spacing-top-small")
                 const textBox = document.querySelector("#search > span:nth-child(9) > div > h1 > div > div.sg-col-14-of-20.sg-col-18-of-24.sg-col.s-breadcrumb.sg-col-10-of-16.sg-col-6-of-12 > div > div")
-                
+
+                textBox.innerText = ""
+                volumeCPCReq(searchWord, headers).then((stats) => {
+                    if(stats.volume){
+                        textBox.innerText = "Volume: " + stats.volume
+                    }
+                    if(stats.cpc){
+                        textBox.innerText = textBox.innerText + " | CPC: " + stats.cpc
+                    }
+                    if(stats.competition){
+                        textBox.innerText = textBox.innerText + " | Competition: " + stats.competition
+                    }
+                })
                 // const textBox = document.querySelector("a-section a-spacing-small a-spacing-top-small")
                 console.log("Text box:", textBox)
             })
