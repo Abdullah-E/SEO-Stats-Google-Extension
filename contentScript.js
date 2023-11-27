@@ -27,7 +27,7 @@
                     makeChart(stats.monthly_searches)
                 }
                 if(extensionState.stats_enable){
-                    makeTextBox(stats)
+                    textBox = makeTextBox(stats)
                 }
                 
             })
@@ -35,8 +35,20 @@
             if(!extensionState.word_list_enable){
                 return
             }
-            keywordsReqAndTable(searchWord, headers).then(() => {
-                console.log("Related words request successful")
+            // keywordsReqAndTable(searchWord, headers).then(() => {
+            //     console.log("Related words request successful")
+            // })
+            keywordsReq(searchWord, headers).then((data) => {
+                keyWordsTable(data)
+                //wait for element with id "result-stats" to load
+                const xlsxButt = addXLSXButton(type)
+                if(xlsxButt){
+                    xlsxButt.addEventListener("click", function(){
+                        XLSX_export(data)
+                    })
+                }else{
+                    console.log("XLSX button not added")
+                }
             })
         }
         else if(type == "AMAZON_SEARCH"){
@@ -62,7 +74,23 @@
                     }
                     if(stats.competition){
                         textBox.innerText = textBox.innerText + " | Competition: " + stats.competition
+
                     }
+                    //add button to textBox
+                    var XLSX_button = document.createElement("button")
+                    XLSX_button.innerText = "Export XLSX"
+                    XLSX_button.id = "related-words-button"
+                    textBox.appendChild(XLSX_button)
+                    XLSX_button.addEventListener("click", function(){
+                        console.log("XLSX Button clicked")
+                        keywordsReq(searchWord, headers)
+                        .then((data) => {
+                            console.log("XLSX data:", data)
+                            XLSX_export(data)
+                        })
+
+                    })
+
                 })
                 // const textBox = document.querySelector("a-section a-spacing-small a-spacing-top-small")
                 console.log("Text box:", textBox)
@@ -70,6 +98,9 @@
             .catch((error) => {
                 console.log("Error:", error)
             })
+            
+            //check if XLSX button exists
+            
             
 
         }
@@ -316,37 +347,96 @@ const volumeCPCReq = async (keyword, headers) => {
     }
 }
 
-const keywordsReqAndTable = async (keyword, headers) => {
-    console.log("Keyword:", keyword)
-    const k4kReqData = makeRequestData(keyword, "SUGGESTED_KEYWORDS")
-    const k4kReqObj = {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(k4kReqData),
+const keywordsReq = async (keyword, headers) => {
+    try{
+        const k4kReqData = makeRequestData(keyword, "SUGGESTED_KEYWORDS")
+        const k4kReqObj = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(k4kReqData),
+        }
+        // console.log("req obj:", k4kReqData)
+        const k4kRequest = new Request("https://api.dataforseo.com/v3/keywords_data/google/keywords_for_keywords/live", k4kReqObj)
+        const resp = await fetch(k4kRequest)
+        const data = await resp.json()
+        return data
     }
-    // console.log("req obj:", k4kReqData)
-    const k4kRequest = new Request("https://api.dataforseo.com/v3/keywords_data/google/keywords_for_keywords/live", k4kReqObj)
-    fetch(k4kRequest)
-    .then(response => response.json())
-    .then(data => {
-        if(data?.tasks?.[0]?.result ){
-            const results = data.tasks[0].result
+    catch(error){
+        console.error("API Request Failed in contentScript.js:", error)
+        throw error
+    }
+}
+
+const keyWordsTable = async (api_response) => {
+    try{
+        if(api_response?.tasks?.[0]?.result){
+            const results = api_response.tasks[0].result
             const keywords = results.map(item => item.keyword)
-            
+
             const keywordsTable = makeKeywordTable(results)
             document.body.appendChild(keywordsTable)
             console.log("Related words:", keywords)
-        }else{
-            console.log("Related words request unsuccessful, missing info")
         }
-    })
-    .catch(error => {
-        console.error("API Request Failed in contentScript.js:", error)
-    })
+        else{
+            console.log("Missing info in api response in keywordsTable", api_response)
+        }
+    }
+    catch(error){
+        console.error("Text", error)
+        throw error
+    }
+}
+
+const keywordsReqAndTable = async (keyword, headers) => {
+    try {
+        const response = await keywordsReq(keyword, headers);
+        const data = response
+
+        if (data?.tasks?.[0]?.result) {
+            const results = data.tasks[0].result;
+            const keywords = results.map(item => item.keyword);
+
+            const keywordsTable = makeKeywordTable(results);
+            document.body.appendChild(keywordsTable);
+            console.log("Related words:", keywords);
+        } else {
+            console.log("Related words request unsuccessful, missing info");
+        }
+    } catch (error) {
+        console.error("API Request Failed in contentScript.js:", error);
+    }
+};
+
+const XLSX_export = (data) => {
+    const wb = XLSX.utils.book_new()
+
+    const result = data.tasks[0].result
+
+    const stats_headers = ["keyword", "competition", "competition_index", "search_volume"]
+    const stats_rows = result.map(item => stats_headers.map(header => item[header]))
+    // const stats_rows = result.map(item => [item.keyword, item.search_volume, item.competition, item.cpc])
+    
+    stats_rows.unshift(stats_headers)
+    console.log("Stats:", stats_rows)
+    const stats_ws = XLSX.utils.aoa_to_sheet(stats_rows)
+    XLSX.utils.book_append_sheet(wb, stats_ws, "Stats-Related Words")
+
+    const monthly_headers = result[0].monthly_searches.map(item => `${item.year}-${item.month}`)
+    monthly_headers.unshift("keyword")
+
+    const monthly_rows = result.map(item => [item.keyword, ...item.monthly_searches.map(monthly_item =>  monthly_item.search_volume)])
+    monthly_rows.unshift(monthly_headers)
+    console.log("Monthly:", monthly_rows)
+    const monthly_ws = XLSX.utils.aoa_to_sheet(monthly_rows)
+    XLSX.utils.book_append_sheet(wb, monthly_ws, "Monthly Vol-Related Words")
+
+    XLSX.writeFile(wb, "Related Words.xlsx")
 }
 const makeTextBox = (stats) => {
     textBox = document.getElementById("result-stats")
-    textBox.innerText = ""
+    if(textBox.innerText != ""){
+        textBox.innerText = ""
+    }
     if(stats.volume){
         textBox.innerText = "Volume: " + stats.volume
     }
@@ -356,7 +446,32 @@ const makeTextBox = (stats) => {
     if(stats.competition){
         textBox.innerText = textBox.innerText + " | Competition: " + stats.competition
     }
+    textBox.innerText = textBox.innerText + " | "
     return textBox
+}
+
+const addXLSXButton = (type) => {
+    let textBoxQuerySelector  = ""
+    switch (type) {
+        case "GOOGLE_SEARCH":
+            textBoxQuerySelector = "#result-stats"
+            break;
+        case "AMAZON_SEARCH":
+            textBoxQuerySelector = "#search > span:nth-child(9) > div > h1 > div > div.sg-col-14-of-20.sg-col-18-of-24.sg-col.s-breadcrumb.sg-col-10-of-16.sg-col-6-of-12 > div > div"
+            break;
+        default:
+            break;
+    }
+    const textBox = document.querySelector(textBoxQuerySelector)
+    if(!textBox){
+        console.log("Text box not found")
+        return
+    }
+    var XLSX_button = document.createElement("button")
+    XLSX_button.innerText = "Export XLSX"
+    XLSX_button.id = "related-words-button"
+    textBox.appendChild(XLSX_button)
+    return XLSX_button
 }
 
 const getTextBox = (volume) => {

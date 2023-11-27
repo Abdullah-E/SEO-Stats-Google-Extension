@@ -16,7 +16,7 @@
 	"content_scripts": [
 			{
 				"matches": ["https://*.google.com/*", "https://*.amazon.com/*"],
-					"js": ["lib/chart.js","contentScript.js"],
+					"js": ["lib/xlsx.full.min.js", "lib/chart.js","contentScript.js"],
 					"run_at": "document_start"
 			}
 	],
