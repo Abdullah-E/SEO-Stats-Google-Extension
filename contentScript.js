@@ -27,29 +27,28 @@
                     makeChart(stats.monthly_searches)
                 }
                 if(extensionState.stats_enable){
-                    textBox = makeTextBox(stats)
+                    const textBox = makeTextBox(stats)
                 }
                 
+                if(!extensionState.word_list_enable){
+                    return
+                }
+    
+                keywordsReq(searchWord, headers).then((data) => {
+                    keyWordsTable(data)
+                    //wait for element with id "result-stats" to load
+                    const xlsxButt = addXLSXButton(type)
+                    if(xlsxButt){
+                        xlsxButt.addEventListener("click", function(){
+                            XLSX_export(data)
+                        })
+                    }else{
+                        console.log("XLSX button not added")
+                    }
+                })
             })
             //keywordsReqAndTable(searchQuery)
-            if(!extensionState.word_list_enable){
-                return
-            }
-            // keywordsReqAndTable(searchWord, headers).then(() => {
-            //     console.log("Related words request successful")
-            // })
-            keywordsReq(searchWord, headers).then((data) => {
-                keyWordsTable(data)
-                //wait for element with id "result-stats" to load
-                const xlsxButt = addXLSXButton(type)
-                if(xlsxButt){
-                    xlsxButt.addEventListener("click", function(){
-                        XLSX_export(data)
-                    })
-                }else{
-                    console.log("XLSX button not added")
-                }
-            })
+            
         }
         else if(type == "AMAZON_SEARCH"){
             const headers = new Headers({
