@@ -4,7 +4,9 @@ let extensionState = {
   global_enable: true,
   chart_enable: true,
   word_list_enable: true,
-  stats_enable: true
+  stats_enable: true,
+  arabic_enable: true
+
 }
 chrome.storage.sync.set({'all_states': extensionState}).then(() => {
   console.log("Saved state: ", extensionState)

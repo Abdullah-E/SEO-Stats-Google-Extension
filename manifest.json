@@ -9,7 +9,7 @@
 	},
 	"web_accessible_resources": [
 			{
-					"resources": ["lib/chart.js"],
+					"resources": ["lib/chart.js", "scripts/LanguageManager.js"],
 					"matches": ["https://*.google.com/*", "https://*.amazon.com/*"]
 			}
 	],
