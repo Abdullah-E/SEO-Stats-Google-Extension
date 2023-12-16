@@ -3,9 +3,9 @@
     // let searchQuery, TextBox;
     let received = false
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        if(received){
-            return
-        }
+        // if(received){
+        //     return
+        // }
         received = true
         const { type, searchWord, extensionState } = request;
         const apiLogin = 'iskandarth3@gmail.com'
@@ -27,6 +27,8 @@
 
               
                     if(extensionState.chart_enable){
+                        let what = document.getElementById("rcnt")
+                        console.log("elem in window load:", what)
                         makeChart(stats.monthly_searches)
                     }
                     if(extensionState.stats_enable){
@@ -126,12 +128,11 @@ const chartStyleStrNew = `
     */
 const chartStyleStrNew = `
     #chart-iframe {
-        position: absolute !important;
-        top: 175px !important;
-        right: 25px !important;
+        position: relative !important;
+        left: 70px;
         width: 420px !important;
         height: 400px !important;
-        border-radius: 40px; /* Adjust the value for the desired roundness */
+        border-radius: 40px;
     }`
 
 /*
@@ -203,7 +204,11 @@ const makeRequestData = (keyword, req_type) => {
 const makeChart = (monthly_data) => {
     const iframe = document.createElement('iframe');
     iframe.id = 'chart-iframe';
-    document.body.appendChild(iframe);
+
+    const containing_elem = document.getElementById('rcnt');
+    const google_column = document.getElementById('center_col');
+    console.log("Containing elem in func:", containing_elem)
+    google_column.insertAdjacentElement('afterend', iframe)
 
     iframe.src = chrome.runtime.getURL('components/chart/chart.html');
 
