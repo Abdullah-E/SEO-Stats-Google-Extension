@@ -9,7 +9,7 @@
 	},
 	"web_accessible_resources": [
 			{
-					"resources": ["lib/chart.js", "scripts/LanguageManager.js"],
+					"resources": ["lib/chart.js", "scripts/LanguageManager.js", "assets/Kalimat_header.png", "components/chart/chart.html"],
 					"matches": ["https://*.google.com/*", "https://*.amazon.com/*"]
 			}
 	],
