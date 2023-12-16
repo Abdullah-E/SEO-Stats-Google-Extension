@@ -26,6 +26,7 @@ export default class LanguageManager {
                     'Language': 'Language',
                     'Arabic': 'Arabic',
                     'English': 'English',
+                    'Search volume data' : 'Search volume data',
                 }
             },
             'ar':{

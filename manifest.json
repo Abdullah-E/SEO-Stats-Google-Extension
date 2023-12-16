@@ -9,7 +9,8 @@
 	},
 	"web_accessible_resources": [
 			{
-					"resources": ["lib/chart.js", "scripts/LanguageManager.js", "assets/Kalimat_header.png", "components/chart/chart.html"],
+					"resources": ["lib/chart.js", "scripts/LanguageManager.js", "assets/Kalimat_header.png", "components/chart/chart.html", "components/chart/chart.js", "components/chart/chart.css",
+					 "components/table/table.html"],
 					"matches": ["https://*.google.com/*", "https://*.amazon.com/*"]
 			}
 	],
