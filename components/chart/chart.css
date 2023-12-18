@@ -29,6 +29,7 @@ body {
 .title {
     text-align: right;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .title h1 {

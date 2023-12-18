@@ -1,3 +1,36 @@
+import LanguageManager from "./LanguageManager.js";
+const languageManager = new LanguageManager();
+const setPageLanguage = (languageCode) => {
+    const prev_lang = languageManager.currentLanguage;
+    // console.log("prev_lang: ", prev_lang)
+    languageManager.setLanguage(languageCode);
+    const langElements = document.querySelectorAll('.lang-text');
+    langElements.forEach(element => {
+        const text = element.textContent.trim().toLocaleLowerCase();
+        // console.log("text: ", text);
+        const translated = languageManager.getLocalizedString(text, prev_lang);
+        // console.log("translated: ", translated)
+        if (translated) {
+            element.textContent = translated;
+        }
+    });
+    const langCSSElements = document.querySelectorAll('.lang-text');
+    const HTML = document.getElementsByTagName('html')[0];
+    const css = languageManager.getLocalizedCSS();
+    
+    if (HTML) {
+        if (css['lang'])
+            HTML.lang = css['lang'];
+        if (css['dir'])
+            HTML.dir = css['dir'];
+    }
+    
+    langCSSElements.forEach(element => {
+        
+        languageManager.applyLocalizedCSS(element);
+    });
+}
+
 let monthly_data;
 
 async function handleMonthlyData(data) {
@@ -20,7 +53,7 @@ async function renderChart() {
     const selectedOption = document.querySelector('.options span.selected').innerText.toLowerCase();
     let my_labels, my_vols;
 
-    if (selectedOption === 'years') {
+    if (selectedOption === languageManager.getLocalizedString('years', 'en')) {
         // Calculate yearly data with default values for missing months
         const yearlyData = {};
         monthly_data.forEach(item => {
@@ -58,8 +91,6 @@ async function renderChart() {
         my_labels.reverse();
     }
 
-    console.log('Labels:', my_labels)
-    console.log('Volumes:', my_vols)
     const ctx = document.getElementById('myChart').getContext('2d');
     const labelSize = 12;
     if(myChart) myChart.destroy()
@@ -136,18 +167,42 @@ window.addEventListener('message', function(event) {
     if (data.action === 'setMonthlyData') {
         // console.log('Setting monthly data:', data.monthlyData);
         handleMonthlyData(data.monthlyData);
-    }else{
-        console.log("ehhh")
     }
 });
 
+chrome.storage.sync.onChanged.addListener(function(changes, namespace) {
+    // console.log("changes: ", changes)
+    for (var key in changes) {
+        var storageChange = changes[key];
+        // console.log('Storage key "%s" in namespace "%s" changed. ' +
+        //     'Old value was "%s", new value is "%s".',
+        //     key,
+        //     namespace,
+        //     storageChange.oldValue,
+        //     storageChange.newValue);
+        if(key == 'all_states'){
+            const state = storageChange.newValue
+            const lang = state.arabic_enable ? 'ar' : 'en'
+            setPageLanguage(lang)
+        }
+    }
+
+})
+
 document.addEventListener("DOMContentLoaded", async function() {
     // You can perform any setup here if needed
-    console.log('DOMContentLoaded');
+    chrome.storage.sync.get(['all_states'], function(result) {
+        const state = result.all_states
+        console.log("state: ", state)
+        // const lang = state.language
+        const lang = state.arabic_enable ? 'ar' : 'en'
+        setPageLanguage(lang)
+    });
+    console.log('DOMContentLoaded')
     handleOptions()
     // If monthly data has already been received, render the chart
     if (monthly_data) {
-        await renderChart();
+        await renderChart()
     }else{
         console.log("no data")
     }

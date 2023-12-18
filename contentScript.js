@@ -3,9 +3,9 @@
     // let searchQuery, TextBox;
     let received = false
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        // if(received){
-        //     return
-        // }
+        if(received){
+            return
+        }
         received = true
         const { type, searchWord, extensionState } = request;
         const apiLogin = 'iskandarth3@gmail.com'

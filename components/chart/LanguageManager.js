@@ -16,8 +16,8 @@ export default class LanguageManager {
                     'unicode-bidi': 'bidi-override',
                     // 'font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                     'font-family': 'Franklin Gothic Medium, Arial Narrow, Arial, sans-serif',
-                    'font-size': '20px',
-                    'font-weight': 'normal',
+                    // 'font-size': '20px',
+                    // 'font-weight': 'normal',
                 },
                 
                 'words':{
@@ -27,7 +27,10 @@ export default class LanguageManager {
                     'Language': 'Language',
                     'Arabic': 'Arabic',
                     'English': 'English',
-                    'search volume data': 'search volume data',
+                    'search volume data': 'Search Volume Data',
+                    'days': 'days',
+                    'months': 'months',
+                    'years': 'years',
                     
                 }
             },
@@ -37,7 +40,7 @@ export default class LanguageManager {
                     'dir': 'rtl',
                     // 'unicode-bidi': 'bidi-override',
                     'font-family': 'Tajawal, sans-serif',
-                    'font-size': '40px',
+                    // 'font-size': '40px',
                     'font-weight': 'bold',
                     
                 },
@@ -49,6 +52,9 @@ export default class LanguageManager {
                     'Arabic': 'العربية',
                     'English': 'الانجليزية',
                     'search volume data': 'بيانات حجم البحث',
+                    'days': 'يوم',
+                    'months': 'شهر',
+                    'years': 'سنوات',
 
 
                 }
@@ -78,7 +84,7 @@ export default class LanguageManager {
             const prev_words = this.languages[prev_lang]['words']
             const eng_word = Object.keys(prev_words).find(key => prev_words[key] === word)
             const translated = this.languages[this.currentLanguage]['words'][eng_word]
-            console.log("translated: ", translated, "eng_word", eng_word, "word", word, "prev_lang", prev_lang)
+            // console.log("translated: ", translated, "eng_word", eng_word, "word", word, "prev_lang", prev_lang)
             return translated
         }
         
@@ -101,10 +107,14 @@ export default class LanguageManager {
 
     applyLocalizedCSS(element) {
         const css = this.getLocalizedCSS()
-
+        // console.log(css)
         for (const [key, value] of Object.entries(css)) {
-
-            if(!element.style[key]) element.style[key] = value
+            // console.log(key, value)
+            // console.log("element.style[key]: ", element.style[key])
+           
+            element.style[key] = value
+            
+            
         }
     }
 }

@@ -19,6 +19,7 @@ const setLanguage = (languageCode) => {
 
     const langCSSElements = document.querySelectorAll('.lang-text')
     const HTML = document.getElementsByTagName('html')[0]
+    
     const css = languageManager.getLocalizedCSS()
     if(HTML){
         if(css['lang']) HTML.lang = css['lang']
