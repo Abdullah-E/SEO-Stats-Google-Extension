@@ -9,9 +9,9 @@ const setPageLanguage = (languageCode) => {
     const langElements = document.querySelectorAll('.lang-text');
     langElements.forEach(element => {
         const text = element.textContent.trim().toLocaleLowerCase();
-        console.log("text: ", text);
+        
         const translated = languageManager.getLocalizedString(text, prev_lang);
-        console.log("translated: ", translated)
+        
         if (translated) {
             element.textContent = translated;
         }
@@ -80,7 +80,7 @@ window.addEventListener('message', function(event) {
     const data = event.data
     if(data.action === 'setKeywordTableData'){
         req_data = data.data
-        console.log('setKeywordTableData', req_data)
+        // console.log('setKeywordTableData', req_data)
 
             // console.log('DOMContentLoaded')
         keyWordsTable(req_data)

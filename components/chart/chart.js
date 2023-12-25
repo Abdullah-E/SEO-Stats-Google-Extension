@@ -49,9 +49,9 @@ async function renderChart() {
 
     const selectedOption = document.querySelector('.options span.selected').innerText.toLowerCase();
     let my_labels, my_vols;
-
-    if (selectedOption === languageManager.getLocalizedString('years', 'en')) {
+    if (selectedOption.toLowerCase() === languageManager.getLocalizedString('years', 'en').toLowerCase()) {
         // Calculate yearly data with default values for missing months
+        console.log('Calculating yearly data...')
         const yearlyData = {};
         monthly_data.forEach(item => {
             const year = item.year;

@@ -3,10 +3,10 @@
     // let searchQuery, TextBox;
     let received = false
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        if(received){
-            return
-        }
-        received = true
+        // if(received){
+        //     return
+        // }
+        // received = true
         const { type, searchWord, extensionState } = request;
         const apiLogin = 'iskandarth3@gmail.com'
         const apiPassword = 'cca345191c5d83c5'
@@ -18,37 +18,36 @@
             })
            
 
-            if(!(extensionState.stats_enable || extensionState.chart_enable)){
-                return
-            }
+            // if(!(extensionState.stats_enable || extensionState.chart_enable)){
+            //     return
+            // }
             volumeCPCReq(searchWord, headers).then((stats) => {
                 //document loaded:
                 window.addEventListener("load", function(){
 
                     const iframeContainer = document.createElement('div')
                     if(extensionState.chart_enable){
+                        console.log("did")
                         makeChart(stats.monthly_searches, iframeContainer)
                     }
                     if(extensionState.stats_enable){
                         const textBox = makeTextBox(stats)
                     }
                     
-                    if(!extensionState.word_list_enable){
-                        return
+                    if(extensionState.word_list_enable){
+                        keywordsReq(searchWord, headers).then((data) => {
+                            makeKeywordTableIframe(data, iframeContainer)
+                            //wait for element with id "result-stats" to load
+                            const xlsxButt = addXLSXButton(type)
+                            if(xlsxButt){
+                                xlsxButt.addEventListener("click", function(){
+                                    XLSX_export(data)
+                                })
+                            }else{
+                                console.log("XLSX button not added")
+                            }
+                        })
                     }
-        
-                    keywordsReq(searchWord, headers).then((data) => {
-                        makeKeywordTableIframe(data, iframeContainer)
-                        //wait for element with id "result-stats" to load
-                        const xlsxButt = addXLSXButton(type)
-                        if(xlsxButt){
-                            xlsxButt.addEventListener("click", function(){
-                                XLSX_export(data)
-                            })
-                        }else{
-                            console.log("XLSX button not added")
-                        }
-                    })
                     const google_column = document.getElementById('center_col')
                     google_column.insertAdjacentElement('afterend', iframeContainer)
                 })
@@ -124,6 +123,7 @@ const chartStyleStrNew = `
         height: 400px !important;
         border-radius: ${borderRadius}px !important;
         border: 0px !important;
+        z-index: -1 !important;
     }`
 
 
@@ -183,6 +183,7 @@ const makeChart = (monthly_data, container) => {
     const iframe = document.createElement('iframe');
     iframe.id = 'chart-iframe';
     container.appendChild(iframe);
+    console.log("iframe:", container)
     // const google_column = document.getElementById('center_col');
 
     // google_column.insertAdjacentElement('afterend', iframe)

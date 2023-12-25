@@ -75,12 +75,12 @@ export default class LanguageManager {
     changeCSSFile(fileName, languageCode){
         
         const CSSFilePath = fileName+ '_' + languageCode + '.css'
-        console.log("CSSFilePath: ", CSSFilePath)
+    
         const link = document.createElement('link')
         link.setAttribute('rel', 'stylesheet')
         link.setAttribute('type', 'text/css')
         link.setAttribute('href', CSSFilePath)
-        console.log("link: ", link)
+        
         document.head.appendChild(link)
 
 
@@ -103,7 +103,7 @@ export default class LanguageManager {
             const prev_words = this.languages[prev_lang]['words']
             const eng_word = Object.keys(prev_words).find(key => prev_words[key] === word)
             const translated = this.languages[this.currentLanguage]['words'][eng_word]
-            console.log("translated: ", translated, "eng_word", eng_word, "word", word, "prev_lang", prev_lang)
+            
             return translated
         }
         
