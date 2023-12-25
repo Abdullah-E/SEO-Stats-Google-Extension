@@ -4,20 +4,19 @@ const languageManager = new LanguageManager()
 const setLanguage = (languageCode) => {
     const prev_lang = languageManager.currentLanguage
     languageManager.setLanguage(languageCode)
-    
+
     const langElements = document.querySelectorAll('.lang-text')
     langElements.forEach(element => {
         const text = element.textContent.trim()
-        // console.log("text: ", text)
-        // languageManager.tester(text, prev_lang)
         const translated = languageManager.getLocalizedString(text, prev_lang)
         if(translated){
             element.textContent = translated
         }
 
     })
+    
+    languageManager.changeCSSFile('popup', languageCode)
 
-    const langCSSElements = document.querySelectorAll('.lang-text')
     const HTML = document.getElementsByTagName('html')[0]
     
     const css = languageManager.getLocalizedCSS()
@@ -25,11 +24,16 @@ const setLanguage = (languageCode) => {
         if(css['lang']) HTML.lang = css['lang']
         if(css['dir'])HTML.dir = css['dir']
     }
+    
+    /*
+    const langCSSElements = document.querySelectorAll('.lang-text')
+    
     langCSSElements.forEach(element => {
 
         languageManager.applyLocalizedCSS(element)
+        console.log("element: ", element)
     })
-    
+        */
 
 }
 

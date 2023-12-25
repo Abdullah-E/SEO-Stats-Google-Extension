@@ -25,11 +25,9 @@
                 //document loaded:
                 window.addEventListener("load", function(){
 
-              
+                    const iframeContainer = document.createElement('div')
                     if(extensionState.chart_enable){
-                        let what = document.getElementById("rcnt")
-                        console.log("elem in window load:", what)
-                        makeChart(stats.monthly_searches)
+                        makeChart(stats.monthly_searches, iframeContainer)
                     }
                     if(extensionState.stats_enable){
                         const textBox = makeTextBox(stats)
@@ -40,7 +38,7 @@
                     }
         
                     keywordsReq(searchWord, headers).then((data) => {
-                        makeKeywordTableIframe(data)
+                        makeKeywordTableIframe(data, iframeContainer)
                         //wait for element with id "result-stats" to load
                         const xlsxButt = addXLSXButton(type)
                         if(xlsxButt){
@@ -51,6 +49,8 @@
                             console.log("XLSX button not added")
                         }
                     })
+                    const google_column = document.getElementById('center_col')
+                    google_column.insertAdjacentElement('afterend', iframeContainer)
                 })
             })
             //keywordsReqAndTable(searchQuery)
@@ -115,49 +115,27 @@
 })()
 
 
-
-/*
+const borderRadius = 20;
 const chartStyleStrNew = `
     #chart-iframe {
         position: absolute !important;
-        top: 175px !important;
-        right: 25px !important;
-        width: 420px !important;
-        height: 350px !important;
-    }`
-    */
-const chartStyleStrNew = `
-    #chart-iframe {
-        position: relative !important;
-        left: 70px;
+        margin-left: 80px !important;
         width: 420px !important;
         height: 400px !important;
-        border-radius: 40px;
+        border-radius: ${borderRadius}px !important;
+        border: 0px !important;
     }`
 
-/*
-const tableStyleStr = `
-    #related-words-table {
-        position: absolute !important;
-        background-color: white !important;
-        color: black !important;
-        top: 575px !important; 
-        right: 25px !important;
-        width: 420px !important;
-        height: 350px !important;
-        border-radius: 40px; 
-        overflow: hidden; 
-    }
-`
-*/
+
 const tableStyleStr = `
     #table-iframe {
-        position: absolute !important;
-        top: 625px !important;
-        right: 25px !important;
+        position: relative !important;
+        top: 450px !important;
+        left: 80px !important;
         width: 420px !important;
         height: 600px !important;
-        border-radius: 40px; 
+        border-radius: ${borderRadius}px !important;
+        border: 0px !important; 
     }`;
 
 const makeRequestData = (keyword, req_type) => {
@@ -201,14 +179,13 @@ const makeRequestData = (keyword, req_type) => {
 
 
 
-const makeChart = (monthly_data) => {
+const makeChart = (monthly_data, container) => {
     const iframe = document.createElement('iframe');
     iframe.id = 'chart-iframe';
+    container.appendChild(iframe);
+    // const google_column = document.getElementById('center_col');
 
-    const containing_elem = document.getElementById('rcnt');
-    const google_column = document.getElementById('center_col');
-    console.log("Containing elem in func:", containing_elem)
-    google_column.insertAdjacentElement('afterend', iframe)
+    // google_column.insertAdjacentElement('afterend', iframe)
 
     iframe.src = chrome.runtime.getURL('components/chart/chart.html');
 
@@ -224,45 +201,15 @@ const makeChart = (monthly_data) => {
     
 }
 
-const makeKeywordTable = (resultsArr) => {
-    const keywords = resultsArr.map(item => item.keyword)
-    const volumes = resultsArr.map(item => item.search_volume)
-    const competitions = resultsArr.map(item => item.competition)
 
-    const table = document.createElement("table")
-    table.id = "related-words-table"
 
-    const tableStyle = document.createElement("style")
-    tableStyle.textContent = tableStyleStr
-    document.body.appendChild(tableStyle)
-
-    const tableHeader = document.createElement("tr")
-    const headers = ["Keyword", "Volume", "Competition"]
-    const elems = [keywords, volumes, competitions]
-    for(let i = 0; i < headers.length; i++){
-        const header = document.createElement("th")
-        header.innerText = headers[i]
-        tableHeader.appendChild(header)
-    }
-    table.appendChild(tableHeader)
-    //make rows for 20 keywords (or less)
-    const row_num = Math.min(20, keywords.length)
-    for(let i = 0; i < row_num ; i++){
-        const row = document.createElement("tr")
-        for(let j = 0; j < elems.length; j++){
-            const elem = document.createElement("td")
-            elem.innerText = elems[j][i]
-            row.appendChild(elem)
-        }
-        table.appendChild(row)
-    }
-    return table
-}
-
-const makeKeywordTableIframe = (resultsArr) => {
+const makeKeywordTableIframe = (resultsArr, container) => {
     const iframe = document.createElement('iframe')
     iframe.id = 'table-iframe'
-    document.body.appendChild(iframe)
+    container.appendChild(iframe)
+    // const google_column = document.getElementById('center_col')
+    // google_column.insertAdjacentElement('afterend', iframe)
+    // document.body.appendChild(iframe)
 
     iframe.src = chrome.runtime.getURL('components/table/table.html')
 
@@ -345,45 +292,6 @@ const keywordsReq = async (keyword, headers) => {
     }
 }
 
-const keyWordsTable = async (api_response) => {
-    try{
-        if(api_response?.tasks?.[0]?.result){
-            const results = api_response.tasks[0].result
-            const keywords = results.map(item => item.keyword)
-
-            const keywordsTable = makeKeywordTable(results)
-            document.body.appendChild(keywordsTable)
-            console.log("Related words:", keywords)
-        }
-        else{
-            console.log("Missing info in api response in keywordsTable", api_response)
-        }
-    }
-    catch(error){
-        console.error("Text", error)
-        throw error
-    }
-}
-
-const keywordsReqAndTable = async (keyword, headers) => {
-    try {
-        const response = await keywordsReq(keyword, headers);
-        const data = response
-
-        if (data?.tasks?.[0]?.result) {
-            const results = data.tasks[0].result;
-            const keywords = results.map(item => item.keyword);
-
-            const keywordsTable = makeKeywordTable(results);
-            document.body.appendChild(keywordsTable);
-            console.log("Related words:", keywords);
-        } else {
-            console.log("Related words request unsuccessful, missing info");
-        }
-    } catch (error) {
-        console.error("API Request Failed in contentScript.js:", error);
-    }
-};
 
 const XLSX_export = (data) => {
     const wb = XLSX.utils.book_new()
@@ -452,14 +360,6 @@ const addXLSXButton = (type) => {
     return XLSX_button
 }
 
-const getTextBox = (volume) => {
-    document.addEventListener("DOMContentLoaded", function () {
-        TextBox = document.getElementById("result-stats")
-        if (TextBox) {
-            TextBox.innerText = "Volume: " + volume + " " + TextBox.innerText
-        }
-    })
-}
 
 const monthlySampleReturn = {
     "version": "0.1.20230825",

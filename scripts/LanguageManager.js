@@ -20,6 +20,7 @@ export default class LanguageManager {
                     'font-weight': 'normal',
                 },
                 
+                
                 'words':{
                     'Kalimat On': 'Kalimat On',
                     'Charts': 'Charts',
@@ -27,8 +28,15 @@ export default class LanguageManager {
                     'Language': 'Language',
                     'Arabic': 'Arabic',
                     'English': 'English',
-                    'search volume data': 'search volume data',
+                    'search volume data': 'Search Volume Data',
+                    'days': 'Days',
+                    'months': 'Months',
+                    'years': 'Years',
+                    'list of keywords': 'List of Keywords',
+                    'similar words': 'Similar Words',
+                    'volume': 'Volume',
                     
+
                 }
             },
             'ar':{
@@ -49,8 +57,12 @@ export default class LanguageManager {
                     'Arabic': 'العربية',
                     'English': 'الانجليزية',
                     'search volume data': 'بيانات حجم البحث',
-
-
+                    'days': 'يوم',
+                    'months': 'شهر',
+                    'years': 'سنوات',
+                    'list of keywords': 'قائمة الكلمات المفتاحية',
+                    'similar words': 'الكلمات المشابهة',
+                    'volume': 'حجم البحث',
                 }
             }
             // Add more languages as needed
@@ -60,6 +72,19 @@ export default class LanguageManager {
         this.currentLanguage = 'en';
     }
 
+    changeCSSFile(fileName, languageCode){
+        
+        const CSSFilePath = fileName+ '_' + languageCode + '.css'
+        console.log("CSSFilePath: ", CSSFilePath)
+        const link = document.createElement('link')
+        link.setAttribute('rel', 'stylesheet')
+        link.setAttribute('type', 'text/css')
+        link.setAttribute('href', CSSFilePath)
+        console.log("link: ", link)
+        document.head.appendChild(link)
+
+
+    }
     setLanguage(languageCode) {
         if (this.languages[languageCode]) {
             this.currentLanguage = languageCode;
@@ -101,10 +126,11 @@ export default class LanguageManager {
 
     applyLocalizedCSS(element) {
         const css = this.getLocalizedCSS()
-
+       
         for (const [key, value] of Object.entries(css)) {
 
             if(!element.style[key]) element.style[key] = value
+            console.log("css: ", css)
         }
     }
 }

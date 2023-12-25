@@ -1,6 +1,6 @@
 // table.js
 let req_data
-import LanguageManager from "./LanguageManager.js";
+import LanguageManager from "../../scripts/LanguageManager.js";
 const languageManager = new LanguageManager();
 const setPageLanguage = (languageCode) => {
     const prev_lang = languageManager.currentLanguage;
@@ -16,8 +16,10 @@ const setPageLanguage = (languageCode) => {
             element.textContent = translated;
         }
     });
-    const langCSSElements = document.querySelectorAll('.lang-text');
-    const HTML = document.getElementsByTagName('html')[0];
+
+    languageManager.changeCSSFile('table', languageCode)
+
+    const HTML = document.getElementsByTagName('html')[0]
     const css = languageManager.getLocalizedCSS();
     
     if (HTML) {
@@ -27,10 +29,7 @@ const setPageLanguage = (languageCode) => {
             HTML.dir = css['dir'];
     }
     
-    langCSSElements.forEach(element => {
-        
-        languageManager.applyLocalizedCSS(element);
-    });
+    
 }
 
 
@@ -39,16 +38,6 @@ const makeKeywordTable = (resultsArr) => {
     const table = document.getElementById('related-words-table')
     // table.id = 'related-words-table';
 
-    const tableHeader = document.createElement('tr')
-    const headers = ['Keyword', 'Volume', 'Competition']
-    
-    for (let i = 0; i < headers.length; i++) {
-        const header = document.createElement('th')
-        header.innerText = headers[i]
-        tableHeader.appendChild(header)
-    }
-    
-    table.appendChild(tableHeader)
 
     const row_num = Math.min(20, resultsArr.length)
     for (let i = 0; i < row_num; i++) {
@@ -103,4 +92,18 @@ window.addEventListener('message', function(event) {
         })
 
     }
+})
+
+
+chrome.storage.sync.onChanged.addListener(function(changes, namespace) {
+    for (var key in changes) {
+        var storageChange = changes[key];
+
+        if(key == 'all_states'){
+            const state = storageChange.newValue
+            const lang = state.arabic_enable ? 'ar' : 'en'
+            setPageLanguage(lang)
+        }
+    }
+
 })

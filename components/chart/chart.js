@@ -1,4 +1,4 @@
-import LanguageManager from "./LanguageManager.js";
+import LanguageManager from "../../scripts/LanguageManager.js";
 const languageManager = new LanguageManager();
 const setPageLanguage = (languageCode) => {
     const prev_lang = languageManager.currentLanguage;
@@ -7,14 +7,15 @@ const setPageLanguage = (languageCode) => {
     const langElements = document.querySelectorAll('.lang-text');
     langElements.forEach(element => {
         const text = element.textContent.trim().toLocaleLowerCase();
-        // console.log("text: ", text);
         const translated = languageManager.getLocalizedString(text, prev_lang);
-        // console.log("translated: ", translated)
         if (translated) {
             element.textContent = translated;
         }
-    });
-    const langCSSElements = document.querySelectorAll('.lang-text');
+    })
+
+    languageManager.changeCSSFile('chart', languageCode);
+
+    // const langCSSElements = document.querySelectorAll('.lang-text');
     const HTML = document.getElementsByTagName('html')[0];
     const css = languageManager.getLocalizedCSS();
     
@@ -24,11 +25,7 @@ const setPageLanguage = (languageCode) => {
         if (css['dir'])
             HTML.dir = css['dir'];
     }
-    
-    langCSSElements.forEach(element => {
-        
-        languageManager.applyLocalizedCSS(element);
-    });
+
 }
 
 let monthly_data;
@@ -132,6 +129,7 @@ async function renderChart() {
                             size: labelSize,
                             weight: 900,
                         },
+                        maxTicksLimit: 5, // Adjust the number as needed
                     },
                 }
             },
@@ -145,6 +143,7 @@ async function renderChart() {
             responsive: true
         }
     });
+    
 }
 
 function handleOptions() {
@@ -171,15 +170,9 @@ window.addEventListener('message', function(event) {
 });
 
 chrome.storage.sync.onChanged.addListener(function(changes, namespace) {
-    // console.log("changes: ", changes)
     for (var key in changes) {
         var storageChange = changes[key];
-        // console.log('Storage key "%s" in namespace "%s" changed. ' +
-        //     'Old value was "%s", new value is "%s".',
-        //     key,
-        //     namespace,
-        //     storageChange.oldValue,
-        //     storageChange.newValue);
+
         if(key == 'all_states'){
             const state = storageChange.newValue
             const lang = state.arabic_enable ? 'ar' : 'en'
