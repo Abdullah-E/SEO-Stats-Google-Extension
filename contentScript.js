@@ -2,64 +2,86 @@
     console.log("SEO Arabic Extension Initiated")
     // let searchQuery, TextBox;
     let received = false
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener(async(request, sender, sendResponse) => {
         // if(received){
         //     return
         // }
         // received = true
-        const { type, searchWord, extensionState } = request;
+        
+        let { type, searchWord, extensionState } = request;
+        if(!extensionState.global_enable){
+            return
+        }
         const apiLogin = 'iskandarthe3@gmail.com'
         const apiPassword = '02e2a78f39b5bc24'
+        const headers = new Headers({
+            'Authorization': 'Basic ' + btoa(apiLogin + ':' + apiPassword), 
+            'Content-Type': 'application/json',
+        })
         if (type === "GOOGLE_SEARCH") {
-            // searchQuery = searchWord
-            const headers = new Headers({
-                'Authorization': 'Basic ' + btoa(apiLogin + ':' + apiPassword), 
-                'Content-Type': 'application/json',
-            })
-           
-
-            // if(!(extensionState.stats_enable || extensionState.chart_enable)){
-            //     return
-            // }
-            volumeCPCReq(searchWord, headers).then((stats) => {
-                //document loaded:
-                // window.addEventListener("load", function(){
-
-                    const iframeContainer = document.createElement('div')
-                    if(extensionState.chart_enable){
-                        console.log("did")
-                        makeChart(stats.monthly_searches, iframeContainer)
-                    }
-                    if(extensionState.stats_enable){
-                        const textBox = makeTextBox(stats)
-                    }
+            
+            try{
+                const stats = await volumeCPCReq(searchWord, headers)
+                const relatedWordsData = await keywordsReq(searchWord, headers)
+                
+                const iframeContainer = document.createElement('div')
+                let textBox
+                let iframes = []
+                if(extensionState.chart_enable){
+                    iframes.push( makeChart(stats.monthly_searches))
+                }
+                if(extensionState.stats_enable){
+                    textBox = makeTextBox(stats)
+                }
+                if(extensionState.word_list_enable){
                     
-                    if(extensionState.word_list_enable){
-                        keywordsReq(searchWord, headers).then((data) => {
-                            makeKeywordTableIframe(data, iframeContainer)
-                            //wait for element with id "result-stats" to load
-                            const xlsxButt = addXLSXButton(type)
-                            if(xlsxButt){
-                                xlsxButt.addEventListener("click", function(){
-                                    XLSX_export(data)
-                                })
-                            }else{
-                                console.log("XLSX button not added")
-                            }
+                    iframes.push(makeKeywordTableIframe(relatedWordsData))
+
+                    const xlsxButt = addXLSXButton(type)
+                    if(xlsxButt){
+                        xlsxButt.addEventListener("click", function(){
+                            XLSX_export(relatedWordsData)
                         })
                     }
-                    const google_column = document.getElementById('center_col')
-                    google_column.insertAdjacentElement('afterend', iframeContainer)
-                // })
-            })
-            //keywordsReqAndTable(searchQuery)
+
+                }
+                insertIframes(iframes, iframeContainer)
+                console.log("Iframe container:", iframeContainer)
+                const google_column = document.getElementById('center_col')
+                google_column.insertAdjacentElement('afterend', iframeContainer)
+                chrome.storage.sync.onChanged.addListener(function(changes, namespace) {
+                    console.log("Changes:", changes)
+                    for (var key in changes) {
+                        var storageChange = changes[key];
+                
+                        if(key == 'all_states'){
+                            extensionState = storageChange.newValue
+                            if(!extensionState.global_enable){
+                                iframeContainer.innerHTML = ""
+                                return
+                            }
+                            iframes = []
+                            
+                            if(extensionState.chart_enable){
+                                iframes.push( makeChart(stats.monthly_searches))
+                            }
+
+                            if(extensionState.word_list_enable){
+                                iframes.push(makeKeywordTableIframe(relatedWordsData))
+                            }
+                            //clear iframes from container:
+                            iframeContainer.innerHTML = ""
+                            insertIframes(iframes, iframeContainer)
+                        }
+                    }
+                })
+            }
+            catch(error){
+                console.error("Error:", error)
+            }
             
         }
         else if(type == "AMAZON_SEARCH"){
-            const headers = new Headers({
-                'Authorization': 'Basic ' + btoa(apiLogin + ':' + apiPassword), 
-                'Content-Type': 'application/json',
-            })
             console.log("Amazon search", searchWord)
             volumeCPCReq(searchWord, headers)
             .then((stats) => {
@@ -69,33 +91,33 @@
                 const textBox = document.querySelector("#search > span:nth-child(9) > div > h1 > div > div.sg-col-14-of-20.sg-col-18-of-24.sg-col.s-breadcrumb.sg-col-10-of-16.sg-col-6-of-12 > div > div")
 
                 textBox.innerText = ""
-                volumeCPCReq(searchWord, headers).then((stats) => {
-                    if(stats.volume){
-                        textBox.innerText = "Volume: " + stats.volume
-                    }
-                    if(stats.cpc){
-                        textBox.innerText = textBox.innerText + " | CPC: " + stats.cpc
-                    }
-                    if(stats.competition){
-                        textBox.innerText = textBox.innerText + " | Competition: " + stats.competition
+                
+                if(stats.volume){
+                    textBox.innerText = "Volume: " + stats.volume
+                }
+                if(stats.cpc){
+                    textBox.innerText = textBox.innerText + " | CPC: " + stats.cpc
+                }
+                if(stats.competition){
+                    textBox.innerText = textBox.innerText + " | Competition: " + stats.competition
 
-                    }
-                    //add button to textBox
-                    var XLSX_button = document.createElement("button")
-                    XLSX_button.innerText = "Export XLSX"
-                    XLSX_button.id = "related-words-button"
-                    textBox.appendChild(XLSX_button)
-                    XLSX_button.addEventListener("click", function(){
-                        console.log("XLSX Button clicked")
-                        keywordsReq(searchWord, headers)
-                        .then((data) => {
-                            console.log("XLSX data:", data)
-                            XLSX_export(data)
-                        })
-
+                }
+                //add button to textBox
+                var XLSX_button = document.createElement("button")
+                XLSX_button.innerText = "Export XLSX"
+                XLSX_button.id = "related-words-button"
+                textBox.appendChild(XLSX_button)
+                XLSX_button.addEventListener("click", function(){
+                    console.log("XLSX Button clicked")
+                    keywordsReq(searchWord, headers)
+                    .then((data) => {
+                        console.log("XLSX data:", data)
+                        XLSX_export(data)
                     })
 
                 })
+
+                
                 // const textBox = document.querySelector("a-section a-spacing-small a-spacing-top-small")
                 console.log("Text box:", textBox)
             })
@@ -117,8 +139,7 @@
 const borderRadius = 20;
 const chartStyleStrNew = `
     #chart-iframe {
-        position: absolute !important;
-        margin-left: 80px !important;
+
         width: 420px !important;
         height: 400px !important;
         border-radius: ${borderRadius}px !important;
@@ -129,9 +150,6 @@ const chartStyleStrNew = `
 
 const tableStyleStr = `
     #table-iframe {
-        position: relative !important;
-        top: 450px !important;
-        left: 80px !important;
         width: 420px !important;
         height: 600px !important;
         border-radius: ${borderRadius}px !important;
@@ -177,16 +195,10 @@ const makeRequestData = (keyword, req_type) => {
     }
 }
 
-
-
-const makeChart = (monthly_data, container) => {
+const makeChart = (monthly_data) => {
     const iframe = document.createElement('iframe');
     iframe.id = 'chart-iframe';
-    container.appendChild(iframe);
-    console.log("iframe:", container)
-    // const google_column = document.getElementById('center_col');
-
-    // google_column.insertAdjacentElement('afterend', iframe)
+    // container.appendChild(iframe);
 
     iframe.src = chrome.runtime.getURL('components/chart/chart.html');
 
@@ -198,19 +210,16 @@ const makeChart = (monthly_data, container) => {
         iframeWindow.postMessage({ action: 'setMonthlyData', monthlyData: monthly_data }, '*')
         console.log('message sent');
     }
+    return iframe
 
     
 }
 
-
-
-const makeKeywordTableIframe = (resultsArr, container) => {
+const makeKeywordTableIframe = (resultsArr) => {
     const iframe = document.createElement('iframe')
     iframe.id = 'table-iframe'
-    container.appendChild(iframe)
-    // const google_column = document.getElementById('center_col')
-    // google_column.insertAdjacentElement('afterend', iframe)
-    // document.body.appendChild(iframe)
+    // container.appendChild(iframe)
+
 
     iframe.src = chrome.runtime.getURL('components/table/table.html')
 
@@ -223,7 +232,41 @@ const makeKeywordTableIframe = (resultsArr, container) => {
         iframeWindow.postMessage({ action: 'setKeywordTableData', data: resultsArr }, '*')
         console.log('Message sent to table iframe')
     }
+    return iframe
 }
+
+const insertIframes = (iframes, iframeContainer) => {
+    const initial_offset = 176
+    const iframeDistance = 30
+    let totalHeight = initial_offset
+    const iframelastInd = iframes.length - 1
+
+    iframes.forEach((iframe, index) => {
+        if(index !== iframelastInd) {
+            iframe.style.position = 'absolute'
+            iframe.style.marginLeft = '80px'
+        }
+        else{
+            iframe.style.position = 'relative'
+            iframe.style.left = '80px'
+        }
+
+        if (index > 0 && index < iframelastInd) {
+            iframe.style.top = `${totalHeight}px`
+        }
+        else if (index == iframelastInd) {
+            iframe.style.top = `${totalHeight - initial_offset}px`
+        }
+        const iframeHeight = iframe.id == 'chart-iframe' ? 400 : 600
+        console.log("offsetHeight:", iframeHeight)
+        console.log("iframe", iframe)
+        totalHeight += iframeHeight + iframeDistance
+        iframeContainer.appendChild(iframe) 
+    })
+
+}
+
+
 
 const volumeCPCReq = async (keyword, headers) => {
     let stats = {}
@@ -268,7 +311,7 @@ const volumeCPCReq = async (keyword, headers) => {
         }
         return stats
     }catch(error){
-        console.error("API Request Failed in contentScript.js:", error)
+        console.error("vol or cpc API Request Failed in contentScript.js:", error)
     }
 }
 
@@ -288,7 +331,7 @@ const keywordsReq = async (keyword, headers) => {
         return data
     }
     catch(error){
-        console.error("API Request Failed in contentScript.js:", error)
+        console.error("K4K API Request Failed in contentScript.js:", error)
         throw error
     }
 }

@@ -50,9 +50,9 @@ export default class LanguageManager {
                     
                 },
                 'words':{
-                    'Kalimat On': 'تشفيل',
-                    'Charts': 'الرسومات البينية',
-                    'Keyword List': 'قاءمة الكلمات المفتاحية',
+                    'Kalimat On': 'تشغيل',
+                    'Charts': 'الرسومات البيانية',
+                    'Keyword List': 'قائمة الكلمات المفتاحية',
                     'Language': 'اللغة',
                     'Arabic': 'العربية',
                     'English': 'الانجليزية',

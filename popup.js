@@ -123,7 +123,8 @@ const temp_state = {
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Popup.js loaded")
     // setLanguage('ar')
-    const ids_keys = [['chart-toggle', 'chart_enable'], ['word-list-toggle', 'word_list_enable'], ['arabic-toggle', 'arabic_enable']]
+    //tooggle switch css ids and respective keys in state
+    const ids_keys = [['global-toggle', 'global_enable'],['chart-toggle', 'chart_enable'], ['word-list-toggle', 'word_list_enable'], ['arabic-toggle', 'arabic_enable']]
 
     chrome.storage.sync.get(['all_states'], (result) =>{
         console.log("Retrieved extension state: ", result)
