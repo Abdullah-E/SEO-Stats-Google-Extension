@@ -45,7 +45,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
       extensionState: extensionState
     })
   }
-  if(tab.url && tab.url.includes("https://www.amazon.com/s")){
+  if(tab.url && (tab.url.includes("https://www.amazon.com/s") || tab.url.includes("https://www.amazon.sa"))){
     const searchWord = getSearchWord(tab.url, "k")
     console.log("Search word: ",searchWord)
     chrome.tabs.sendMessage(tabId, {
