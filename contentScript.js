@@ -85,8 +85,6 @@
             console.log("Amazon search", searchWord)
             volumeCPCReq(searchWord, headers)
             .then((stats) => {
-                console.log("Stats:", stats)
-                console.log("Stats length:", Object.keys(stats).length)
                 // const textBox = document.getElementsByClassName("a-section a-spacing-small a-spacing-top-small")
                 const textBox = document.querySelector("#search > span:nth-child(9) > div > h1 > div > div.sg-col-14-of-20.sg-col-18-of-24.sg-col.s-breadcrumb.sg-col-10-of-16.sg-col-6-of-12 > div > div")
 
@@ -108,7 +106,6 @@
                 XLSX_button.id = "related-words-button"
                 textBox.appendChild(XLSX_button)
                 XLSX_button.addEventListener("click", function(){
-                    console.log("XLSX Button clicked")
                     keywordsReq(searchWord, headers)
                     .then((data) => {
                         console.log("XLSX data:", data)
@@ -117,7 +114,6 @@
 
                 })
 
-                
                 // const textBox = document.querySelector("a-section a-spacing-small a-spacing-top-small")
                 console.log("Text box:", textBox)
             })
@@ -126,9 +122,6 @@
             })
             
             //check if XLSX button exists
-            
-            
-
         }
     })
     
