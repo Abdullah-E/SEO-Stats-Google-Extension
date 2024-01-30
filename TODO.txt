@@ -1,0 +1,15 @@
+-USER
+--email
+--password
+--name
+
+-LOGIN
+--page
+--backend functions
+-SIGNUP
+--page
+--backend functions
+
+-GOOGLE AUTH API
+-PAYMENT OPTIONS
+-popup signin/signup 

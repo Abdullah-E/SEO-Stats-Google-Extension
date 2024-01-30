@@ -2,6 +2,8 @@
     console.log("SEO Arabic Extension Initiated")
     // let searchQuery, TextBox;
     let received = false
+
+    // message received from background.js:
     chrome.runtime.onMessage.addListener(async(request, sender, sendResponse) => {
         // if(received){
         //     return
