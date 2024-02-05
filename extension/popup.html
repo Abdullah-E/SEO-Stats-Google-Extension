@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html  dir = "ltr" lang = "en">
+<head>
+    <meta charset = "utf-8">
+    <link href="popup_en.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="container">
+        <div class="title-div">
+            <img src="assets/Kalimat_header.png" alt="Kalimat" id="title-img">
+        </div>
+        <div class="options-group">
+            <div class = "option">
+                <span class = "option-text lang-text">Kalimat On</span>
+                <label class="switch">
+                    <input type="checkbox" id="global-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class = "option">
+                <span class = "option-text lang-text">Charts</span>
+                <label class="switch">
+                    <input type="checkbox" id="chart-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class = "option">
+                <span class = "option-text lang-text">Keyword List</span>
+                <label class="switch">
+                    <input type="checkbox" id="word-list-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class = "option">
+                <span class = "option-text lang-text">Arabic</span>
+                <label class="switch">
+                    <input type="checkbox" id="arabic-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+        </div>
+    </div>
+
+    <script type="module" src="scripts/LanguageManager.js"></script>
+    <script type="module" src="popup.js"></script>
+    
+</body>
+</html>

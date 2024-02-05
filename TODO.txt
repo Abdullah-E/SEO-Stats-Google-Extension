@@ -10,6 +10,11 @@
 --page
 --backend functions
 
--GOOGLE AUTH API
--PAYMENT OPTIONS
+-GOOGLE AUTH API - react frontend
+-PAYMENT OPTIONS - reliant on backend
 -popup signin/signup 
+
+-LANDING PAGES
+--info pages
+--link to login
+--link to extension

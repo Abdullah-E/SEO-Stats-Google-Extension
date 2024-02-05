@@ -1,0 +1,38 @@
+<!-- Updated chart.html -->
+<!DOCTYPE html>
+<html dir = "ltr" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Chart</title>
+    <link rel="stylesheet" type="text/css" href="chart_en.css">
+</head>
+<body>
+    <!-- Header -->
+    <div id="header">
+        <div class="header-content">
+            <img src="../../assets/Kalimat_icon.png" alt="Icon" class="icon">
+            <div class="title">
+                <h1 class = "lang-text">Search volume data</h1>
+                <div class="options">
+                    <span class = "lang-text">Years</span>
+                    <span class= "selected lang-text">Months</span>
+                    <span class = "lang-text">Days</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Container -->
+    <div id="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <!-- Chart Scripts -->
+    <!-- <script type="module" src="../../scripts/LanguageManager.js"></script> -->
+
+    <script type="module" src="../../lib/chart.js"></script>
+    <script type="module" src="chart.js"></script>
+    
+</body>
+</html>
