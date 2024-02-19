@@ -1,6 +1,8 @@
 console.log("Popup.js loaded")
 import LanguageManager from './scripts/LanguageManager.js'
 const languageManager = new LanguageManager()
+const kalimat_web_url = "https://kalimat-web-deployed.vercel.app/"
+
 const setLanguage = (languageCode) => {
     const prev_lang = languageManager.currentLanguage
     languageManager.setLanguage(languageCode)
@@ -25,15 +27,6 @@ const setLanguage = (languageCode) => {
         if(css['dir'])HTML.dir = css['dir']
     }
     
-    /*
-    const langCSSElements = document.querySelectorAll('.lang-text')
-    
-    langCSSElements.forEach(element => {
-
-        languageManager.applyLocalizedCSS(element)
-        console.log("element: ", element)
-    })
-        */
 
 }
 
@@ -91,26 +84,38 @@ const handleLanguageToggleText = (state) => {
     }
     
 }
-/*
-const getState = () => {
-    chrome.runtime.sendMessage({
-        type: "REQ_STATE"
-    })
 
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        console.log("Message received: ", message)
-        switch (message.type) {
-            case "RES_STATE":
-                console.log("Receieved state ", message.extensionState)
-                return message.extensionState
-            default:
-                break
-        }
-    })
+const showLoginButton = () => {
+    // Create and append a login button
+    const loginButton = document.createElement('button')
+    loginButton.textContent = 'Login';
+    loginButton.addEventListener('click', () => {
+        // Handle login action here
+        // For example, you might open a new tab for login
+        chrome.tabs.create({ url: kalimat_web_url })
+    });
+
+    // Append the login button to the popup HTML
+    document.body.appendChild(loginButton);
+}
+
+const showLogoutButton = () => {
+    // Create and append a logout button
+    const logoutButton = document.createElement('button')
+    logoutButton.textContent = 'Logout';
+    logoutButton.addEventListener('click', () => {
+        // Handle logout action here
+        // For example, you might clear the user cookie
+        chrome.cookies.remove({ url: kalimat_web_url, name: 'user' }, (cookie) => {
+            console.log("Removed user cookie: ", cookie)
+        })
+    });
+
+    // Append the logout button to the popup HTML
+    document.body.appendChild(logoutButton);
 
 }
-*/
-// document.addEventListener("DOMContentLoaded", () => {});
+
 
 const temp_state = {
     global_enable: true,
@@ -122,7 +127,19 @@ const temp_state = {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Popup.js loaded")
-    // setLanguage('ar')
+    chrome.storage.sync.get(['auth_state'], (result) => {
+        console.log("Retrieved auth state: ", result)
+        const auth_state = result.auth_state ? result.auth_state : { logged_in: false }
+        
+        if( auth_state.logged_in ){
+            console.log("User is logged in")
+            // showLogoutButton()
+        }else{
+            console.log("User is not logged in")
+            showLoginButton()
+        }
+    })
+
     //tooggle switch css ids and respective keys in state
     const ids_keys = [['global-toggle', 'global_enable'],['chart-toggle', 'chart_enable'], ['word-list-toggle', 'word_list_enable'], ['arabic-toggle', 'arabic_enable']]
 

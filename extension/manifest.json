@@ -2,7 +2,7 @@
 	"name": "Kalimat",
 	"version": "1.1.0",
 	"description": "Arabic Keywords Tool",
-	"permissions": ["storage", "tabs", "activeTab"],
+	"permissions": ["storage", "tabs", "activeTab", "cookies"],
 	"host_permissions": ["<all_urls>"],
 	"background": {
 			"service_worker": "background.js"
@@ -10,7 +10,7 @@
 	"web_accessible_resources": [
 			{
 					"resources": ["lib/chart.js", "scripts/LanguageManager.js", "assets/Kalimat_header.png", "components/chart/chart.html", "components/chart/chart.js", "components/chart/chart.css",
-					 "components/table/table.html"],
+					 "components/table/table.html", "lib/glogin_platform.js"],
 					"matches": ["https://*.google.com/*", "https://*.amazon.com/*", "https://*.amazon.sa/*"]
 			}
 	],
@@ -31,7 +31,6 @@
 			"default_title": "Kalimat",
 			"default_popup": "popup.html"
 	},
-	
 
 	"manifest_version": 3
 }

@@ -2,7 +2,7 @@
     console.log("SEO Arabic Extension Initiated")
     // let searchQuery, TextBox;
     let received = false
-
+    let logged_in = false
     // message received from background.js:
     chrome.runtime.onMessage.addListener(async(request, sender, sendResponse) => {
         // if(received){
@@ -10,7 +10,18 @@
         // }
         // received = true
         
-        let { type, searchWord, extensionState } = request;
+        
+        
+        let { type, searchWord, extensionState, authState } = request;
+
+        if(!authState.logged_in){
+            console.log("Not logged in")
+            return
+        }
+        else{
+            console.log("Logged in")
+        }
+
         if(!extensionState.global_enable){
             return
         }
@@ -57,7 +68,9 @@
                         var storageChange = changes[key];
                 
                         if(key == 'all_states'){
+
                             extensionState = storageChange.newValue
+
                             if(!extensionState.global_enable){
                                 iframeContainer.innerHTML = ""
                                 return

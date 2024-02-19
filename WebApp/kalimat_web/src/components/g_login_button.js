@@ -8,7 +8,7 @@ function Login(){
         // alert(
         //   `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
         // );
-        // this.props.history.push('/');
+        this.props.history.push('/');
       };
     
       const onFailure = (res) => {
