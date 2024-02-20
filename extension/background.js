@@ -36,7 +36,11 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 })
 
 const userCookieChanged = (cookie) => {
+  if(!cookie){
+    return
+  }
   console.log("User cookie changed: ", cookie)
+  
   const cookie_data = decodeURIComponent(cookie.value)
   if(cookie_data){
     const user = JSON.parse(cookie_data)
