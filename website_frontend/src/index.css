@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @import url('https://db.onlinewebfonts.com/c/e659e9c4fcee36a9ee6b81b490e48058?family=HelveticaNeueLT+W20+75+Bold');
+@import url('https://db.onlinewebfonts.com/c/e659e9c4fcee36a9ee6b81b490e48058?family=HelveticaNeueLT+W20+55+Roman'); */
+
+@font-face {
+    font-family: 'Helvetica Neue Arabic';
+    src: url('../src/Resources/fonts/Helvetica\ Neue\ LT\ Arabic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Helvetica Neue Arabic';
+    src: url('../src/Resources/fonts/HelveticaNeueLT-Arabic-75-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  html{
+    min-height:100vh;
+  }
+  body{
+    min-height:100vh;
+  }

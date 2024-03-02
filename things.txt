@@ -1,2 +1,1 @@
 google client id = '467769474365-subo3k3h1cbp63u3pec5f4q6etdmtuqq.apps.googleusercontent.com'
-email to login = genericalyselfaware@gmail.com

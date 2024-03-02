@@ -11,7 +11,6 @@
         // received = true
         
         
-        
         let { type, searchWord, extensionState, authState } = request;
 
         if(!authState.logged_in){

@@ -1,20 +1,27 @@
--USER
---email
---password
---name
-
 -LOGIN
---page
---backend functions
--SIGNUP
---page
---backend functions
+--website X
+    -- show user profile, after logged in.  
+    -- logout button
 
--GOOGLE AUTH API - react frontend
+--backend
+    --user profile
+
+--extension google login X
+    --popup login pyaara
+
 -PAYMENT OPTIONS - reliant on backend
--popup signin/signup 
 
--LANDING PAGES
---info pages
---link to login
---link to extension
+miscellaneous
+    --react-google-login deprecated
+
+TIMELINE:
+    --merge repos ♥ (abd)
+    
+    --login minor additions/changes in website (sala)
+    --login minor additions/changes in extension (abd)
+    --login and user profile backend (sala koshish kray ga)
+    
+    --PAYMENT
+        payment api etc (probably stripe)
+    
+    --CREDITS system
