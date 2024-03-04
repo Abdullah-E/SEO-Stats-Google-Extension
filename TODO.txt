@@ -25,4 +25,3 @@ TIMELINE:
         payment api etc (probably stripe)
     
     --CREDITS system
-    
