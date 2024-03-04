@@ -25,3 +25,16 @@ TIMELINE:
         payment api etc (probably stripe)
     
     --CREDITS system
+
+    BACKEND SETUP:
+        --Setup server (Express.js)
+        --Database setup (MongoDB)
+        --Create models (User, Payment, etc.)
+        --Setup routes
+            --Auth routes (Login, Register, Logout)
+            --User routes (Get profile, Update profile)
+            --Payment routes (Initiate payment, Verify payment)
+        --Setup controllers for each route
+        --Implement middleware for authentication and error handling
+        --Setup environment variables
+        --Test endpoints with Postman
