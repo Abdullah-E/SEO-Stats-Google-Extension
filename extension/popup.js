@@ -100,20 +100,37 @@ const showLoginButton = () => {
 }
 
 const showLogoutButton = () => {
-    // Create and append a logout button
     const logoutButton = document.createElement('button')
     logoutButton.textContent = 'Logout';
     logoutButton.addEventListener('click', () => {
-        // Handle logout action here
-        // For example, you might clear the user cookie
         chrome.cookies.remove({ url: kalimat_web_url, name: 'user' }, (cookie) => {
             console.log("Removed user cookie: ", cookie)
         })
-    });
-
-    // Append the logout button to the popup HTML
+    })
     document.body.appendChild(logoutButton);
+}
 
+const showLoggedInUI = () => {
+    fetch('popup.html')
+    .then(response => response.text())
+    .then(data => {
+        document.body.innerHTML = data
+    })
+}
+
+const showLoggedOutUI = () => {
+    fetch('frontend/popup/logged_out_popup.html')
+    .then(response => response.text())
+    .then(data => {
+        document.body.innerHTML = data
+    })
+    .then( e => {
+        const svgButton = document.getElementById('svg-button')
+        svgButton.addEventListener('click', ()=>{
+            chrome.tabs.create({ url: kalimat_web_url })
+        })
+    })
+    
 }
 
 
@@ -134,9 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if( auth_state.logged_in ){
             console.log("User is logged in")
             // showLogoutButton()
+            showLoggedInUI()
         }else{
             console.log("User is not logged in")
-            showLoginButton()
+            showLoggedOutUI()
         }
     })
 
@@ -152,6 +170,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         handleLanguageToggleText(curr_state)
     })
-
-    
 })
