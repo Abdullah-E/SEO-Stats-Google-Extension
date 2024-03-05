@@ -35,21 +35,27 @@ const registerUser = async(req,res)=>{
 
 const loginUser=async (req,res)=>{
     try{
-        const { googleId } = req.body;
+        const { googleId } = req.body
+        console.log("req.body", req.body)
+        console.log("googleId", googleId)
+
         //check if user exists
-        const user= await User.findOne({ googleId });
+        const user= await User.findOne({ googleId})
+        console.log("found user", user)
         if(!user){
             return res.json({
                 error:'no user found'
             })
         }
+        //TODO: hide this
+        const jwt_secret = "3247954029"
         // user found, create a token
         jwt.sign({
             email: user.email,
             id: user._id,
             name: user.name
         }, 
-        process.env.JWT_SECRET,
+        jwt_secret,
         {}, 
         (err,token)=>{
             if(err) {
