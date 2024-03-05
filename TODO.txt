@@ -25,7 +25,7 @@ TIMELINE:
         payment api etc (probably stripe)
     
     --CREDITS system
-
+b
     BACKEND SETUP:
         --Setup server (Express.js)
         --Database setup (MongoDB)
