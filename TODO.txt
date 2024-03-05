@@ -17,12 +17,22 @@ miscellaneous
 TIMELINE:
     --merge repos ♥ (abd)
     
-    --login minor additions/changes in website (sala)
-    --login minor additions/changes in extension (abd)
+    --login minor additions/changes in website (sala)  
+    --login minor additions/changes in extension (abd) ◄
     --login and user profile backend (sala koshish kray ga)
     
+    --repos merge (abd)
+    --backend login, logout functionality (abd)
+    --profile page frontend (shera)
+    --profile page get user backend 
+    
+    (getcredits, addcredits):
+    --CREDITS system frontend
+    --CREDITS system  backend
+
     --PAYMENT
         payment api etc (probably stripe)
     
-    --CREDITS system
     
+b
+  
