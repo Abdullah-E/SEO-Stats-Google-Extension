@@ -1,18 +1,17 @@
-import Navigation from './components/Navigation';
-import About from './components/About';
-import Features from './components/Features';
-import Pricing from './components/Pricing';
-import Footer from './components/Footer';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import MainPage from './pages/MainPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
-    <div>
-      <Navigation></Navigation>
-      <About></About>
-      <Features></Features>
-      <Pricing></Pricing>
-      <Footer></Footer>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </Router>
   );
 }
 
