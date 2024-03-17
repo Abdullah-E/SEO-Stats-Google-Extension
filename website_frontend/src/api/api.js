@@ -1,7 +1,7 @@
 // apiUtils.js
 
 const API_URL = 'http://localhost:8000';
-export const sendProfileToServer = (profileObj) => {
+export const googleLoginRequest = async (profileObj) => {
     const endpoint = API_URL + '/login'; // Replace this with your actual server API endpoint
 
     return fetch(endpoint, {

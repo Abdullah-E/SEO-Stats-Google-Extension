@@ -2,7 +2,7 @@ import {GoogleLogin} from 'react-google-login';
 import { useCookies } from 'react-cookie';
 // import UserContext from '../contexts/UserContext';
 const clientId = '467769474365-subo3k3h1cbp63u3pec5f4q6etdmtuqq.apps.googleusercontent.com';
-const { sendProfileToServer } = require('../../api/api');
+const { googleLoginRequest } = require('../../api/api');
 
 function Login(){
 
@@ -13,7 +13,7 @@ function Login(){
         setCookie('user', res.profileObj, { path: '/' })
         console.log("cookies:", cookies)
 
-        sendProfileToServer(res.profileObj)
+        googleLoginRequest(res.profileObj)
             .then(response => {
                 // Handle response if needed
                 console.log('Profile sent successfully:', response);
@@ -22,9 +22,6 @@ function Login(){
                 // Handle error if needed
                 console.error('Failed to send profile to server:', error);
             });
-        // setUser(res.profileObj);
-        //rfresh the page:
-        // window.location.reload();
 
       };
     

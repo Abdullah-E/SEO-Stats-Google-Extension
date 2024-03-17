@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose"
 // const findOrCreate = require('mongoose-findorcreate')
 
 const UserSchema = new mongoose.Schema({
@@ -33,4 +33,4 @@ const UserSchema = new mongoose.Schema({
 
 // UserSchema.plugin(findOrCreate);
 
-module.exports = mongoose.model('User', UserSchema);
+export const User = mongoose.model('User', UserSchema);
