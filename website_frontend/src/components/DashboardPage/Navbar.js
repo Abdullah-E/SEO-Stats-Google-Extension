@@ -3,7 +3,7 @@ import React from 'react';
 import Logo from "../../Resources/images/Logo.svg";
 import DownloadButton from "../DownloadButton";
 
-function Navbar({ toggleMenu }) {
+function Navbar({ toggleMenu, profile }) {
   return (
     <section className="py-5 px-6 bg-custom-green-primary shadow relative z-50 h-[100px]">
       <nav className="relative">
@@ -25,7 +25,7 @@ function Navbar({ toggleMenu }) {
             </button>
           </div>
           <div className="hidden lg:block">
-            <DownloadButton />
+            <DownloadButton profile={profile}/>
           </div>
         </div>
       </nav>

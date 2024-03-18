@@ -1,7 +1,8 @@
 import React from "react";
 import { UserIcon } from "@heroicons/react/solid";
 
-function DownloadButton() {
+function DownloadButton({profile}) {
+  console.log(profile)
   return (
     <button
       class="cursor-pointer inline-flex items-center rounded-full 
@@ -13,7 +14,7 @@ px-9 py-3 text-xl font-semibold text-white hover:text-white   hover:bg-custom-da
             <UserIcon className="h-3 w-3 text-gray-800" />
           </div>
         </div>
-        <span>حساب شخصي</span>
+        <span>{profile.name}</span>
       </div>
     </button>
   );

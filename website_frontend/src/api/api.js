@@ -24,7 +24,7 @@ export const googleLoginRequest = async (profileObj) => {
 }
 
 
-export const getProfileRequest = async (googleId) => {
+export const getProfile = async (googleId) => {
     const endpoint = API_URL + '/profile?googleId=' + googleId; 
 
     return fetch(endpoint)

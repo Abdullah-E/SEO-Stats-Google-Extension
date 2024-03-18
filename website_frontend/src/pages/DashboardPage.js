@@ -9,13 +9,23 @@ import MainContent from "../components/DashboardPage/MainContent"
 import Navbar from "../components/DashboardPage/Navbar"
 import Sidebar from "../components/DashboardPage/Sidebar"
 import { useCookies } from "react-cookie"
-import {getUserProfile} from "../api/api"
+import {getProfile} from "../api/api"
 
 export default function DashboardPage() {
   
   const [cookies, setCookie, getCookie] = useCookies(["user"])
-  const cookie = getCookie("user")
-  console.log("cookie", cookie)
+  const [profile, setProfile] = useState({})
+
+  useEffect(() =>{
+    if(!cookies.user){
+      window.location.href = "/"
+    }
+    getProfile(cookies.user.googleId)
+    .then(response => {
+      setProfile(response)
+    })
+  }, [cookies.user])
+  
 
   const [isMenuVisible, setIsMenuVisible] = useState(false)
 
@@ -26,9 +36,9 @@ export default function DashboardPage() {
 
   return (
     <div dir="rtl" className="flex flex-col h-screen overflow-auto">
-      <Navbar toggleMenu={toggleMenu} />
+      <Navbar toggleMenu={toggleMenu} profile={profile}/>
       <div>
-        <Sidebar isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} />
+        <Sidebar isMenuVisible={isMenuVisible} toggleMenu={toggleMenu}/>
         <MainContent />
       </div>
     </div>
