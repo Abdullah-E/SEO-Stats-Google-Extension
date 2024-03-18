@@ -2,7 +2,7 @@
 
 const API_URL = 'http://localhost:8000';
 export const googleLoginRequest = async (profileObj) => {
-    const endpoint = API_URL + '/login'; // Replace this with your actual server API endpoint
+    const endpoint = API_URL + '/login'; 
 
     return fetch(endpoint, {
         method: 'POST',
@@ -21,4 +21,21 @@ export const googleLoginRequest = async (profileObj) => {
         console.error('Error sending profile to server:', error);
         throw error;
     });
-};
+}
+
+
+export const getProfileRequest = async (googleId) => {
+    const endpoint = API_URL + '/profile?googleId=' + googleId; 
+
+    return fetch(endpoint)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch profile from server');
+        }
+        return response.json();
+    })
+    .catch(error => {
+        console.error('Error fetching profile from server:', error);
+        throw error;
+    });
+}

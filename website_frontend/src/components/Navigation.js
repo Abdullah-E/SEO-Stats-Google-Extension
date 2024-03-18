@@ -32,7 +32,7 @@ export default function Navigation() {
     if(gapi.auth){
       if(gapi.auth.getToken()){
         var accessToken = gapi.auth.getToken().access_token
-        console.log(accessToken)
+        console.log("access token:",accessToken)
       }
     }
   })

@@ -43,4 +43,14 @@ fastify.post('/login', async function (req, res) {
     }
 
 })
+
+fastify.get('/profile', async function (req, res) {
+    const googleId = req.query.googleId
+    if(!googleId){
+        return res.send({ error:'no googleID in query' })
+    }
+    return res.send( await User.findOne({ googleId }) )
+})
+
+
 // router.get('/profile',getProfile)

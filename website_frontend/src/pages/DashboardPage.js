@@ -1,22 +1,28 @@
-import React, { useEffect } from "react";
-import Logo from "../Resources/images/Logo.svg";
-import DownloadButton from "../components/DownloadButton";
-import { useState } from "react";
-import HomeIcon from "../Resources/images/icons/home-icon.svg";
-import LogOutIcon from "../Resources/images/icons/logout-icon.svg";
-import MasareefIcon from "../Resources/images/icons/masareef-icon.svg";
-import MainContent from "../components/DashboardPage/MainContent";
-import Navbar from "../components/DashboardPage/Navbar";
-import Sidebar from "../components/DashboardPage/Sidebar";
+import React, { useEffect } from "react"
+import Logo from "../Resources/images/Logo.svg"
+import DownloadButton from "../components/DownloadButton"
+import { useState } from "react"
+import HomeIcon from "../Resources/images/icons/home-icon.svg"
+import LogOutIcon from "../Resources/images/icons/logout-icon.svg"
+import MasareefIcon from "../Resources/images/icons/masareef-icon.svg"
+import MainContent from "../components/DashboardPage/MainContent"
+import Navbar from "../components/DashboardPage/Navbar"
+import Sidebar from "../components/DashboardPage/Sidebar"
+import { useCookies } from "react-cookie"
+import {getUserProfile} from "../api/api"
 
 export default function DashboardPage() {
-  // state variable to control the visibility of the navbar menu
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  
+  const [cookies, setCookie, getCookie] = useCookies(["user"])
+  const cookie = getCookie("user")
+  console.log("cookie", cookie)
+
+  const [isMenuVisible, setIsMenuVisible] = useState(false)
 
   // Function to toggle the menu's visibility
   const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible);
-  };
+    setIsMenuVisible(!isMenuVisible)
+  }
 
   return (
     <div dir="rtl" className="flex flex-col h-screen overflow-auto">
@@ -26,5 +32,5 @@ export default function DashboardPage() {
         <MainContent />
       </div>
     </div>
-  );
+  )
 }
