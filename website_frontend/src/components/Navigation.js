@@ -4,6 +4,7 @@ import chromeICON from "../Resources/images/Rectanglechrome.svg"
 import Heroandcurve from "../Resources/images/imgHero.png"
 import MobileMenu from "./MobileMenu" // Adjust the path based on your file structure
 import Hero from "./Hero"
+import UserBadge from "./UserBadge"
 
 import GLogin from "./buttons/GLogin"
 import GLogout from "./buttons/GLogout"
@@ -69,7 +70,7 @@ export default function Navigation() {
               />
             </span>
           </button> */}
-          {cookies.user ? <GLogout/> : <GLogin/>}
+          {cookies.user ? <UserBadge profile = {cookies.user}/> : <GLogin/>}
           {/* <GLogin/> */}
         </div>
 

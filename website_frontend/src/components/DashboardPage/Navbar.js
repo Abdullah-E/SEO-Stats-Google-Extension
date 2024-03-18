@@ -1,7 +1,7 @@
 // components/DashboardPage/Navbar.js
 import React from 'react';
 import Logo from "../../Resources/images/Logo.svg";
-import DownloadButton from "../DownloadButton";
+import UserBadge from "../UserBadge";
 
 function Navbar({ toggleMenu, profile }) {
   return (
@@ -25,7 +25,7 @@ function Navbar({ toggleMenu, profile }) {
             </button>
           </div>
           <div className="hidden lg:block">
-            <DownloadButton profile={profile}/>
+            <UserBadge profile={profile}/>
           </div>
         </div>
       </nav>

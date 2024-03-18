@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import Logo from "../Resources/images/Logo.svg"
-import DownloadButton from "../components/DownloadButton"
+import DownloadButton from "../components/UserBadge"
 import { useState } from "react"
 import HomeIcon from "../Resources/images/icons/home-icon.svg"
 import LogOutIcon from "../Resources/images/icons/logout-icon.svg"
