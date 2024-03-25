@@ -11,7 +11,7 @@ function UserBadge({profile}) {
   return (
     <button
       onClick={handleClick}
-      class="cursor-pointer inline-flex items-center rounded-full 
+      className="cursor-pointer inline-flex items-center rounded-full 
 px-9 py-3 text-xl font-semibold text-white hover:text-white   hover:bg-custom-dark-blue transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300 focus:bg-transparent focus:text-custom-dark-blue"
     >
       <div className="flex gap-2">

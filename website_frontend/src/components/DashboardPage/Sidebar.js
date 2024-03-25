@@ -6,7 +6,14 @@ import LogOutIcon from "../../Resources/images/icons/logout-icon.svg";
 import MasareefIcon from "../../Resources/images/icons/masareef-icon.svg";
 import GLogout from "../buttons/GLogout"
 
+import {useNavigate} from "react-router-dom"
+
 function Sidebar({ isMenuVisible, toggleMenu }) {
+  const navigate = useNavigate();
+  const homeClick = () => {
+    navigate("/");
+  }
+
   return (
     <div className={`lg:block ${isMenuVisible ? "" : "hidden"} navbar-menu relative z-10`}>
       <div className="navbar-backdrop fixed lg:hidden inset-0 bg-gray-800 opacity-10" onClick={toggleMenu} />
@@ -18,7 +25,7 @@ function Sidebar({ isMenuVisible, toggleMenu }) {
         </div>
         <div className="flex flex-col justify-between h-full px-4 pt-7">
           <ul className="mb-8">
-            <li>
+            <li onClick={homeClick}>
               <a className="flex items-center pl-3 py-4 pr-6 text-custom-dark-blue hover:bg-indigo-50 rounded" href="#">
                 <img className="size-5 mr-3 rtl:ml-3" src={HomeIcon} alt="Home" />
                 <span className="text-xl font-serif">حساب شخصي</span>

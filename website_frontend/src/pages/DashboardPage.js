@@ -24,6 +24,10 @@ export default function DashboardPage() {
     .then(response => {
       setProfile(response)
     })
+    .catch(error => {
+      console.error('Error fetching profile from server:', error);
+      // throw error;
+    });
   }, [cookies.user])
   
 
