@@ -17,14 +17,23 @@ miscellaneous
 TIMELINE:
     --merge repos ♥ (abd)
     
-    --login minor additions/changes in website (sala)
-    --login minor additions/changes in extension (abd)
-    --login and user profile backend (sala koshish kray ga)
+    --login minor additions/changes in website (abd) ☻
+    --dashboard big work heavy lifting (sala) ☻
+    --login minor additions/changes in extension (abd) 
+    --login and user profile backend (sala) ☻
+
     --PAYMENT
-        payment api etc (probably stripe)
+    --payment api etc (probably stripe/paddle) (abd)
     
     --CREDITS system
+    --backend functions (sala)
+       --add credits (googleID)
+       --get credits
+    --credits displaying on frontend (abd)
 
+    --buy credits button(s)
+
+    --deduct credits on query from extension 
     BACKEND SETUP:
         --Setup server (Express.js)
         --Database setup (MongoDB)
