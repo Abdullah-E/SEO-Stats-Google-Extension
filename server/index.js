@@ -3,6 +3,7 @@
 import {fastify} from './routes/init.js'
 
 import './routes/authRoutes.js'
+import './routes/paymentRoutes.js'
 
 import './db.js'
 
