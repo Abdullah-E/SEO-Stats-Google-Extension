@@ -9,7 +9,7 @@ function App() {
   Paddle.Initialize({ 
     token: "test_18780c77df0655fc4d02d1b24ec",
     eventCallback: function(data) {
-      if(data.name == "Checkout.Completed") {
+      if(data.name == "checkout.completed") {
         console.log(data)
       }
     }
