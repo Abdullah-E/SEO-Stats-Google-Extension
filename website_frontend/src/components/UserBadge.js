@@ -1,12 +1,29 @@
 import React from "react";
 import { UserIcon } from "@heroicons/react/solid";
 import {useNavigate} from "react-router-dom"
+import {OauthRedirect} from "../api/api"
+import { useCookies } from "react-cookie";
 
-function UserBadge({profile}) {
+function UserBadge() {
+  const [cookies, setCookie, getCookie] = useCookies(["user"])
+  const profile = cookies.user
+  
+  const logged_in = profile? profile.email? true: false :false
+  console.log("logged_in", logged_in)
   const navigate = useNavigate();
   const handleClick = () => {
-    console.log("UserBadge clicked");
-    navigate("/dashboard");
+    if(logged_in){
+      navigate("/dashboard");
+
+    }else{
+      OauthRedirect()
+      .then((data)=>{
+        if(data.url){
+          window.location.href = data.url
+        }
+      })
+    }
+      
   }
   return (
     <button

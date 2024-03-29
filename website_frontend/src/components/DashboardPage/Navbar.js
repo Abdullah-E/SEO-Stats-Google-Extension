@@ -3,7 +3,7 @@ import React from 'react';
 import Logo from "../../Resources/images/Logo.svg";
 import UserBadge from "../UserBadge";
 
-function Navbar({ toggleMenu, profile }) {
+function Navbar({ toggleMenu}) {
   return (
     <section className="py-5 px-6 bg-custom-green-primary shadow relative z-50 h-[100px]">
       <nav className="relative">
@@ -25,7 +25,7 @@ function Navbar({ toggleMenu, profile }) {
             </button>
           </div>
           <div className="hidden lg:block">
-            <UserBadge profile={profile}/>
+            <UserBadge/>
           </div>
         </div>
       </nav>

@@ -1,36 +1,16 @@
 import mongoose from "mongoose"
-// const findOrCreate = require('mongoose-findorcreate')
 
 const UserSchema = new mongoose.Schema({
-    googleId: {
-        type: String,
-        required: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    familyName: {
-        type: String,
-        required: true
-    },
-    givenName: {
-        type: String,
-        required: true
-    },
-    imageUrl: {
-        type: String
-    },
-    name: {
-        type: String,
-        required: true
-    }
-});
+    
+    id:{type:String, required:true},
+    email:{type:String, required:true},
+    verified_email:{type:Boolean},
+    name:{type:String, required:true},
+    given_name:{type:String, required:true},
+    family_name:{type:String, required:true},
+    picture:{type:String},
+    locale:{type:String}
+})
 
-// UserSchema.plugin(findOrCreate);
 
-export const User = mongoose.model('User', UserSchema);
+export const User = mongoose.model('User', UserSchema)

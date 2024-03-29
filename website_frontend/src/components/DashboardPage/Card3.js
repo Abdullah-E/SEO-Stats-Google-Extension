@@ -1,7 +1,10 @@
 import React from "react";
+// import {PaddleSDK, Options} from 'paddle-sdk'
 
 function Card3() {
   // Card 3 Data
+  // Options.sandbox = true
+  
   const card3Data = [
     { key: "row1", words: "10 كلمات", rate: "0.4", price: "4" },
     { key: "row2", words: "50 كلمة", rate: "0.4", price: "20" },

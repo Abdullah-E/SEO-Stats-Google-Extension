@@ -1,0 +1,18 @@
+{
+    "web": {
+        "client_id": "467769474365-subo3k3h1cbp63u3pec5f4q6etdmtuqq.apps.googleusercontent.com",
+        "project_id": "stripe-test-412822",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "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",
+        "redirect_uris": [
+            "http://localhost:3000/dashboard",
+            "https://kalimat-web-deployed.vercel.app/dashboard"
+        ],
+        "javascript_origins": [
+            "http://localhost:3000",
+            "https://kalimat-web-deployed.vercel.app"
+        ]
+    }
+}

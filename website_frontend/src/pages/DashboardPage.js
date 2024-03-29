@@ -9,27 +9,50 @@ import MainContent from "../components/DashboardPage/MainContent"
 import Navbar from "../components/DashboardPage/Navbar"
 import Sidebar from "../components/DashboardPage/Sidebar"
 import { useCookies } from "react-cookie"
-import {getProfile} from "../api/api"
+import {getProfile, accessTokenRequest } from "../api/api"
 
 export default function DashboardPage() {
   
   const [cookies, setCookie, getCookie] = useCookies(["user"])
-  const [profile, setProfile] = useState({})
 
   useEffect(() =>{
-    if(!cookies.user){
-      window.location.href = "/"
-    }
-    getProfile(cookies.user.googleId)
-    .then(response => {
-      setProfile(response)
-    })
-    .catch(error => {
-      console.error('Error fetching profile from server:', error);
-      // throw error;
-    });
-  }, [cookies.user])
+    if(cookies.user){
+      console.log("cookies.user", cookies.user)
+    }else{
+
+      const url = window.location.href
+      const params = url.split("?")[1]
+      const paramList = params.split("&")
+      let paramObj = {}
+      paramList.forEach(param => {
+        const [key, value] = param.split("=")
+        paramObj[key] = value
+      })
+      const accessToken = paramObj.code
+      console.log("accessToken", accessToken)
+      accessTokenRequest(accessToken)
+      .then(response => {
+
+          // Check if response contains profile data
+          if (response && response.profile) {
+
+              setCookie('user', response.profile, { path: '/' })
+
+          } 
+          // else {
+          //     throw new Error('Invalid response from server: Missing profile data');
+          // }
+      })
+      .catch(error => {
+          console.error('Error handling access token:', error);
+      }, [])
   
+      
+    }
+
+    
+
+  })
 
   const [isMenuVisible, setIsMenuVisible] = useState(false)
 
@@ -40,7 +63,7 @@ export default function DashboardPage() {
 
   return (
     <div dir="rtl" className="flex flex-col h-screen overflow-auto">
-      <Navbar toggleMenu={toggleMenu} profile={profile}/>
+      <Navbar toggleMenu={toggleMenu}/>
       <div>
         <Sidebar isMenuVisible={isMenuVisible} toggleMenu={toggleMenu}/>
         <MainContent />
