@@ -8,16 +8,17 @@ import fs from 'fs'
 const oauth_creds = JSON.parse(fs.readFileSync('oauth_creds.json', 'utf8'))
 
 const { client_id, client_secret, redirect_uris } = oauth_creds.web
-const oauth2Client = new google.auth.OAuth2(client_id, client_secret, "https://kalimat-web-deployed.vercel.app/dashboard")
+const oauth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[1])
 const scopes = ["https://www.googleapis.com/auth/userinfo.profile"]
 
 fastify.get('/oauth-redirect', async function (req, res) {
-    console.log("google login", redirect_uris[0])
+    console.log("google login", redirect_uris[1])
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
         include_granted_scopes: true,
     })
+    console.log("authUrl", authUrl)
     res.send({ url: authUrl })
     
 })
