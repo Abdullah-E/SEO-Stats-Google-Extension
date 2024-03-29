@@ -5,13 +5,8 @@ import Heroandcurve from "../Resources/images/imgHero.png"
 import MobileMenu from "./MobileMenu" // Adjust the path based on your file structure
 import Hero from "./Hero"
 import UserBadge from "./UserBadge"
-
-import GLogin from "./buttons/GLogin"
-import GLogout from "./buttons/GLogout"
-import {gapi} from 'gapi-script'
 import { useCookies } from 'react-cookie'
 
-// const clientId = '467769474365-subo3k3h1cbp63u3pec5f4q6etdmtuqq.apps.googleusercontent.com'
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -20,24 +15,7 @@ export default function Navigation() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   };
-  /*
-  useEffect(() => {
-    function start(){
-      gapi.client.init({
-        clientId: clientId,
-        scope: ''
-      })
-    }
-    gapi.load('client:auth2', start)
 
-    if(gapi.auth){
-      if(gapi.auth.getToken()){
-        var accessToken = gapi.auth.getToken().access_token
-        console.log("access token:",accessToken)
-      }
-    }
-  })
-  */
   return (
     <section className="relative pb-24">
       <div className="absolute top-0 right-0 flex w-full h-3/4 md:h-2/3 bg-custom-color-1"></div>

@@ -1,10 +1,23 @@
 import React from "react";
-// import {PaddleSDK, Options} from 'paddle-sdk'
+
 
 function Card3() {
   // Card 3 Data
   // Options.sandbox = true
-  
+  const Paddle = window.Paddle
+  const items = [
+    {
+      priceId:"pri_01ht33qbvsszdnt109576a64z2",
+      quantity:1
+    }
+
+  ]
+  const priceClick = () => {
+    console.log("clciy")
+    Paddle.Checkout.open({
+      items: items
+    })
+  }
   const card3Data = [
     { key: "row1", words: "10 كلمات", rate: "0.4", price: "4" },
     { key: "row2", words: "50 كلمة", rate: "0.4", price: "20" },
@@ -35,7 +48,7 @@ function Card3() {
                   </span>
                 </td>
                 <td className="text-center">
-                  <span className="py-[2px] bg-custom-dark-blue text-white text-2xl md:text-xl lg:text-2xl font-bold rounded-full flex items-center justify-center gap-[2px]">
+                  <span onClick={priceClick} className="py-[2px] bg-custom-dark-blue text-white text-2xl md:text-xl lg:text-2xl font-bold rounded-full flex items-center justify-center gap-[2px]">
                     <span className="text-sm md:text-xs lg:text-sm opacity-60">
                       $
                     </span>

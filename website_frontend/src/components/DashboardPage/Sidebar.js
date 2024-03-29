@@ -4,7 +4,6 @@ import Logo from "../../Resources/images/Logo.svg";
 import HomeIcon from "../../Resources/images/icons/home-icon.svg";
 import LogOutIcon from "../../Resources/images/icons/logout-icon.svg";
 import MasareefIcon from "../../Resources/images/icons/masareef-icon.svg";
-import GLogout from "../buttons/GLogout"
 import { useCookies } from 'react-cookie';
 
 import {useNavigate} from "react-router-dom"
@@ -49,7 +48,6 @@ function Sidebar({ isMenuVisible, toggleMenu }) {
             <a className="flex items-center pl-3 py-2 pr-6 text-custom-dark-blue hover:bg-indigo-50 rounded" href="#">
               <img className="size-5 mr-3 rtl:ml-3" src={LogOutIcon} alt="Logout" />
               <span className="text-xl font-serif" onClick={logOut}>تسجيل خروج</span>
-              {/* {<GLogout/>} */}
             </a>
           </div>
         </div>
