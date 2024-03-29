@@ -10,6 +10,7 @@ import Navbar from "../components/DashboardPage/Navbar"
 import Sidebar from "../components/DashboardPage/Sidebar"
 import { useCookies } from "react-cookie"
 import {getProfile, accessTokenRequest } from "../api/api"
+import { Navigate } from "react-router-dom"
 
 export default function DashboardPage() {
   
@@ -21,6 +22,9 @@ export default function DashboardPage() {
     }else{
 
       const url = window.location.href
+      if (!url){
+        Navigate("/")
+      }
       const params = url.split("?")[1]
       const paramList = params.split("&")
       let paramObj = {}
