@@ -10,7 +10,9 @@ function App() {
     token: "test_18780c77df0655fc4d02d1b24ec",
     eventCallback: function(data) {
       if(data.name == "checkout.completed") {
+
         console.log(data)
+        //send data to backend (add credits)
       }
     }
   })
