@@ -1,6 +1,6 @@
 // apiUtils.js
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://seo-stats-google-extension.onrender.com';
 export const googleLoginRequest = async (profileObj) => {
     const endpoint = API_URL + '/login'; 
 
