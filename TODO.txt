@@ -28,10 +28,10 @@ TIMELINE:
 
     --credits displaying on frontend (abd)
     
-    --add products to paddle dashboard 
+    --add products to paddle dashboard (sala) X
         
-    --buy credits button(s) frontend (sala)
-        --DashboardPage Card1.js Card2.js Card3.js
+    --buy credits button(s) frontend (sala) X
+        --DashboardPage Card1.js Card2.js Card3.js X
     --frontend successful transaction callback (sala koshish)
         --App.js (to start make a temporary backend function)
     --backend successful transaction api (abd)
