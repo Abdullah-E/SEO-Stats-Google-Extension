@@ -12,6 +12,7 @@ function App() {
 
   const [cookies, setCookie, getCookie] = useCookies(["user"])
   console.log("cookies", cookies)
+  const g_id = cookies.user.id
   const Paddle = window.Paddle
   Paddle.Initialize({ 
     token: "test_18780c77df0655fc4d02d1b24ec",
@@ -29,8 +30,8 @@ function App() {
           total_credits += parseInt(credits) * item.quantity
           
         }
-        const g_id = cookies.user.id
-        console.log(cookies.user)
+        // const g_id = cookies.user.id
+        // console.log(cookies.user)
         console.log("g_id in paddle callback", g_id)
         addCredits(g_id, total_credits)
 
