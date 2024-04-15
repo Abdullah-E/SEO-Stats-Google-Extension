@@ -22,7 +22,7 @@ function App() {
         let total_credits = 0
         for (let i = 0; i < items_arr.length; i++) {
           const item = items_arr[i]
-          const credits = item.name.split(' ')[0]
+          const credits = item.product.name.split(' ')[0]
 
           total_credits += parseInt(credits) * item.quantity
           
