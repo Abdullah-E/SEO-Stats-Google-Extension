@@ -8,8 +8,10 @@ import DashboardPage from './pages/DashboardPage';
 import { addCredits } from './api/api';
 
 function App() {
+  
 
   const [cookies, setCookie, getCookie] = useCookies(["user"])
+  console.log("cookies", cookies)
   const Paddle = window.Paddle
   Paddle.Initialize({ 
     token: "test_18780c77df0655fc4d02d1b24ec",
