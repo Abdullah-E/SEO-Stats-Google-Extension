@@ -18,6 +18,7 @@ const authState = {
   logged_in: false
 
 }
+let userState = null
 chrome.storage.sync.set({'auth_state': authState}).then(() => {
   console.log("Saved auth state: ", authState)
 })
@@ -46,9 +47,11 @@ const userCookieChanged = (cookie) => {
     const user = JSON.parse(cookie_data)
     console.log("User: ", user)
     authState.logged_in = true
+
     chrome.storage.sync.set({'auth_state': authState}).then(() => {
       console.log("Saved auth state: ", authState)
     })
+    userState = user
   }else{
     authState.logged_in = false
     chrome.storage.sync.set({'auth_state': authState}).then(() => {
@@ -107,12 +110,14 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
       type: "GOOGLE_SEARCH",
       searchWord: searchWord,
       extensionState: extensionState,
-      authState: authState
+      authState: authState,
+      userState: userState
     })
   }
   if(tab.url.includes("https://www.amazon.com/s") || tab.url.includes("https://www.amazon.sa")){
     const searchWord = getSearchWord(tab.url, "k")
     console.log("Search word: ",searchWord)
+    
     chrome.tabs.sendMessage(tabId, {
       type: "AMAZON_SEARCH",
       searchWord: searchWord,

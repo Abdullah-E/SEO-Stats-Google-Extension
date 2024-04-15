@@ -3,6 +3,9 @@ import LanguageManager from './scripts/LanguageManager.js'
 const languageManager = new LanguageManager()
 const kalimat_web_url = "https://kalimat-web-deployed.vercel.app/"
 
+//buttons: [id, key]
+const ids_keys = [['global-toggle', 'global_enable'],['chart-toggle', 'chart_enable'], ['word-list-toggle', 'word_list_enable'], ['arabic-toggle', 'arabic_enable']]
+
 const setLanguage = (languageCode) => {
     const prev_lang = languageManager.currentLanguage
     languageManager.setLanguage(languageCode)
@@ -53,9 +56,11 @@ const handleToggleSwitch = (state, id, key) =>{
         console.log("Toggle switch not found", id, key)
         return
     }
+    console.log("Toggle switch: ", toggleSwitch)
     toggleSwitch.checked = state[key]
 
     toggleSwitch.addEventListener('click', function () {
+        console.log("clicked", key)
         state[key] = !state[key]
         chrome.storage.sync.set({ 'all_states': state })
         toggleSwitch.checked = state[key]
@@ -64,7 +69,8 @@ const handleToggleSwitch = (state, id, key) =>{
             handleLanguageToggleText(state)
         }
     })
-
+    console.log("event listeners: ", toggleSwitch)
+    
 
 }
 
@@ -72,12 +78,12 @@ const handleLanguageToggleText = (state) => {
     // const toggleSwitch = document.getElementById('arabic-toggle')
     // console.log("toggleSwitch: ", toggleSwitch)
     if(state.arabic_enable){
-        // console.log("arabic")
+        console.log("arabic")
         setLanguage('ar')
         // toggleSwitch.textContent = languageManager.getLocalizedString('Arabic')
     }
     else{  
-        // console.log("english")
+        console.log("english")
         setLanguage('en')
         
         // toggleSwitch.textContent = languageManager.getLocalizedString('English')
@@ -115,6 +121,15 @@ const showLoggedInUI = () => {
     .then(response => response.text())
     .then(data => {
         document.body.innerHTML = data
+        chrome.storage.sync.get(['all_states'], (result) =>{
+            console.log("Retrieved extension state: ", result)
+            const curr_state = result.all_states ? result.all_states : temp_state
+    
+            for (let [id, key] of ids_keys) {
+                handleToggleSwitch(curr_state, id, key)
+            }
+            handleLanguageToggleText(curr_state)
+        })
     })
 }
 
@@ -159,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     //tooggle switch css ids and respective keys in state
-    const ids_keys = [['global-toggle', 'global_enable'],['chart-toggle', 'chart_enable'], ['word-list-toggle', 'word_list_enable'], ['arabic-toggle', 'arabic_enable']]
+    // const ids_keys = [['global-toggle', 'global_enable'],['chart-toggle', 'chart_enable'], ['word-list-toggle', 'word_list_enable'], ['arabic-toggle', 'arabic_enable']]
 
     chrome.storage.sync.get(['all_states'], (result) =>{
         console.log("Retrieved extension state: ", result)

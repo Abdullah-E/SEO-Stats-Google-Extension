@@ -1,4 +1,5 @@
 (() => {
+    const backendURL = "https://seo-stats-google-extension.onrender.com"
     console.log("SEO Arabic Extension Initiated")
     // let searchQuery, TextBox;
     let received = false
@@ -11,8 +12,8 @@
         // received = true
         
         
-        let { type, searchWord, extensionState, authState } = request;
-
+        let { type, searchWord, extensionState, authState, userState } = request;
+        const user_gid = userState?.gid
         if(!authState.logged_in){
             console.log("Not logged in")
             return
@@ -33,7 +34,7 @@
         if (type === "GOOGLE_SEARCH") {
             
             try{
-                const stats = await volumeCPCReq(searchWord, headers)
+                const stats = await volumeCPCReq(searchWord, headers, user_gid)
                 const relatedWordsData = await keywordsReq(searchWord, headers)
                 
                 const iframeContainer = document.createElement('div')
@@ -275,7 +276,7 @@ const insertIframes = (iframes, iframeContainer) => {
 
 
 
-const volumeCPCReq = async (keyword, headers) => {
+const volumeCPCReq = async (keyword, headers, g_id) => {
     let stats = {}
     try{
         const volReqData = makeRequestData(keyword, "SEARCH_VOLUME")
@@ -316,6 +317,10 @@ const volumeCPCReq = async (keyword, headers) => {
             if(cpc)stats.cpc = cpc
             if(competition)stats.competition = competition
         }
+
+        //send to backend
+
+
         return stats
     }catch(error){
         console.error("vol or cpc API Request Failed in contentScript.js:", error)
