@@ -28,6 +28,7 @@ function App() {
           
         }
         const g_id = cookies.user.id
+        console.log(cookies.user)
         console.log("g_id in paddle callback", g_id)
         addCredits(g_id, total_credits)
 
