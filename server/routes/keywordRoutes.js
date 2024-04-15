@@ -1,5 +1,5 @@
 import { fastify } from './init.js'
-import { User } from '../models/User.js'
+import { User } from '../Models/user.js'
 
 fastify.get('/google_search', async function (req, res) {
     try {

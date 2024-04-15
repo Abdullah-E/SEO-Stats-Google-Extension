@@ -1,6 +1,6 @@
 import {fastify} from './init.js'
 
-import {User} from '../models/User.js'
+import {User} from '../Models/user.js'
 
 const paddle_key = 'bd583272806e7992e93f1b266e1585e6eee614256fcfbf973a'
 const paddle_base_url = 'https://sandbox-api.paddle.com'
