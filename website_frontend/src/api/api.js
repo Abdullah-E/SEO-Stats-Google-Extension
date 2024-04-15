@@ -84,3 +84,17 @@ export const accessTokenRequest = async (code) => {
         throw error;
     }
 }
+
+export const addCredits = async (g_id, credits) => {
+    const endpoint = API_URL + '/payment_success?g_id=' + g_id + '&credits=' + credits;
+    try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error('Failed to add credits to user');
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Error adding credits to user:', error);
+        throw error;
+    }
+}

@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import DashboardPage from './pages/DashboardPage';
 
+import { addCredits } from './api/api';
+
 function App() {
   const Paddle = window.Paddle
   Paddle.Initialize({ 
@@ -12,7 +14,8 @@ function App() {
       if(data.name == "checkout.completed") {
 
         console.log(data)
-        //send data to backend (add credits)
+        //call add credits here
+        
       }
     }
   })

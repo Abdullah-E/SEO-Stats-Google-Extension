@@ -1,5 +1,5 @@
 (() => {
-    const backendURL = "https://seo-stats-google-extension.onrender.com"
+    
     console.log("SEO Arabic Extension Initiated")
     // let searchQuery, TextBox;
     let received = false
@@ -13,7 +13,9 @@
         
         
         let { type, searchWord, extensionState, authState, userState } = request;
-        const user_gid = userState?.gid
+        console.log("Request:", request)
+        const user_gid = userState?.id
+        console.log("User gid:", user_gid)
         if(!authState.logged_in){
             console.log("Not logged in")
             return
@@ -275,7 +277,7 @@ const insertIframes = (iframes, iframeContainer) => {
 }
 
 
-
+const backendURL = "https://seo-stats-google-extension.onrender.com"
 const volumeCPCReq = async (keyword, headers, g_id) => {
     let stats = {}
     try{
@@ -319,6 +321,11 @@ const volumeCPCReq = async (keyword, headers, g_id) => {
         }
 
         //send to backend
+        const reqURL = `${backendURL}/google_search?keyword=${keyword}&g_id=${g_id}`
+        const backendRes = await fetch(reqURL)
+        const backendData = await backendRes.json()
+        console.log("Backend response:", backendData)
+
 
 
         return stats
