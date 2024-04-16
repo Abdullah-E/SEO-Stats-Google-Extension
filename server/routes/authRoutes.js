@@ -50,14 +50,12 @@ fastify.get('/google-callback', async  (req, res)=> {
         }
         const user_data_json = await user_data.json()
         const found_user = await User.findOne({ id: user_data_json.id })
-        console.log("found_user", found_user)
-        console.log("used id", user_data_json.id)
         if(found_user == null){
             const new_user = await User.create(user_data_json)
             return res.send({ message: 'New user created successfully', profile: new_user })
         }
         console.log("user_data_json", user_data_json)
-        res.send({message: "User logged in succesfully",profile:user_data_json})
+        res.send({message: "User logged in succesfully",profile:found_user})
 
     }
     catch(error){
