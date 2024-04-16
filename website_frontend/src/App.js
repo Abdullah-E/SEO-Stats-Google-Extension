@@ -41,7 +41,7 @@ function App() {
         token: "test_18780c77df0655fc4d02d1b24ec",
         eventCallback: handlePaddleEvent
     });
-  }, [])
+  }, [getUserId, getUser])
   return (
 
     <Router>
