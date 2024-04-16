@@ -30,9 +30,9 @@ function App() {
         total_credits += parseInt(credits) * item.quantity
         
       }
-      const g_id = cookies.user.id
-      console.log("g_id in paddle callback", g_id)
-      addCredits(g_id, total_credits)
+      // const g_id = cookies.user.id
+      // console.log("g_id in paddle callback", g_id)
+      // addCredits(g_id, total_credits)
 
     }
   }
