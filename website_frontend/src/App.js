@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserProvider } from './contexts/UserContext';
+import { UserProvider, useUser } from './contexts/UserContext';
 // import {useCookies} from "react-cookie"
 
 import MainPage from './pages/MainPage';
@@ -13,12 +13,13 @@ function App() {
 
   // const [cookies, setCookie, getCookie] = useCookies(["user"])
   
-  console.log("cookies", cookies)
+  // console.log("cookies", cookies)
   // const g_id = cookies.user.id
+  const {user} = useUser()
+  console.log("user in app", user)
 
   const handlePaddleEvent = (data) => {
     if(data.name == "checkout.completed") {
-      const {user} = useUser()
       console.log("user frm context", user)
       console.log(data)
       const items_arr = data.data.items
