@@ -1,5 +1,3 @@
-// apiUtils.js
-import { get } from "mongoose"
 import { useCookies } from "react-cookie"
 
 const API_URL = 'https://seo-stats-google-extension.onrender.com'
