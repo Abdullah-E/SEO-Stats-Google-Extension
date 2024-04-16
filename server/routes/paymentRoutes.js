@@ -44,7 +44,8 @@ fastify.get('/payment_success', async function (req, res) {
         res.status(404).send('User not found')
         return
     }
-    user.credits += credits
+
+    user.credits +=parseInt(credits)
     await user.save()
     res.send('Credits added successfully')
     
