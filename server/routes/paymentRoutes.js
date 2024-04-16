@@ -46,6 +46,6 @@ fastify.get('/payment_success', async function (req, res) {
     }
     user.credits += credits
     await user.save()
-
+    res.send('Credits added successfully')
     
 })
