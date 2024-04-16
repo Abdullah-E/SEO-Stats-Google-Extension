@@ -9,8 +9,6 @@ import { addCredits, useUserCookies } from './api/api';
 function App() {
 
   const {getUserId, getUser} = useUserCookies()
-  const g_id_test = getUserId()
-  console.log("g_id_test", g_id_test)
 
   useEffect(() => {
     const Paddle = window.Paddle;

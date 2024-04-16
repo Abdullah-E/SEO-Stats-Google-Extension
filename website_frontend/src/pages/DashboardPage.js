@@ -39,9 +39,8 @@ export default function DashboardPage() {
 
           // Check if response contains profile data
           if (response && response.profile) {
-
-              setCookie('user', response.profile, { path: '/' })
-
+            setCookie('user', response.profile, { path: '/' })
+            console.log("cookie set:", response.profile)
           } 
           // else {
           //     throw new Error('Invalid response from server: Missing profile data');
