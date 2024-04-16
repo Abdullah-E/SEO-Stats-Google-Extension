@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import { UserProvider, useUser } from './contexts/UserContext';
-// import {useCookies} from "react-cookie"
 
 import MainPage from './pages/MainPage';
 import DashboardPage from './pages/DashboardPage';
@@ -11,6 +9,8 @@ import { addCredits, useUserCookies } from './api/api';
 function App() {
 
   const {getUserId, getUser} = useUserCookies()
+  const g_id_test = getUserId()
+  console.log("g_id_test", g_id_test)
 
   const handlePaddleEvent = (data) => {
 
@@ -29,7 +29,7 @@ function App() {
       const g_id = getUserId()
       const user = getUser()
       console.log("user", user)
-      
+
 
       const response = addCredits( g_id, total_credits)
       console.log("response", response)
