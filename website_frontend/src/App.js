@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserProvider, useUser } from './contexts/UserContext';
+// import { UserProvider, useUser } from './contexts/UserContext';
 // import {useCookies} from "react-cookie"
 
 import MainPage from './pages/MainPage';
 import DashboardPage from './pages/DashboardPage';
 
-import { addCredits } from './api/api';
+import { addCredits, useUserCookies } from './api/api';
 
 function App() {
   
@@ -15,12 +15,14 @@ function App() {
   
   // console.log("cookies", cookies)
   // const g_id = cookies.user.id
-  const {user} = useUser()
-  console.log("user in app", user)
+  
+  // console.log("user in app", user)
+  const {getUserId} = useUserCookies()
 
   const handlePaddleEvent = (data) => {
+    // const {user} = useUser()
     if(data.name == "checkout.completed") {
-      console.log("user frm context", user)
+      // console.log("user frm context", user)
       console.log(data)
       const items_arr = data.data.items
       let total_credits = 0
@@ -32,7 +34,10 @@ function App() {
       }
       // const g_id = cookies.user.id
       // console.log("g_id in paddle callback", g_id)
-      // addCredits(g_id, total_credits)
+      const g_id = getUserId()
+      // addCredits( g_id, total_credits)
+      const response = addCredits( g_id, total_credits)
+      console.log("response", response)
 
     }
   }
@@ -43,14 +48,14 @@ function App() {
     eventCallback: handlePaddleEvent
   })
   return (
-    <UserProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-        </Routes>
-      </Router>
-    </UserProvider>
+
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </Router>
+
   );
 }
 
