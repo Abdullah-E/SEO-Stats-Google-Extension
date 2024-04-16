@@ -17,7 +17,7 @@ function App() {
 
     const handlePaddleEvent = (data) => {
         if (data.name === "checkout.completed") {
-            console.log(data);
+            // console.log(data);
             const items_arr = data.data.items;
             let total_credits = 0;
             items_arr.forEach(item => {

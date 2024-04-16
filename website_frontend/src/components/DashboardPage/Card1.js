@@ -3,9 +3,10 @@ import React from "react";
 import { useUserCookies } from "../../api/api";
 
 function Card1() {
-  const { getUser } = useUserCookies();
-  const user = getUser();
-  const credits = user?.credits || 0;
+  const { getUser } = useUserCookies()
+  const user = getUser()
+  const credits = user?.credits || 0
+  console.log("user in Card1", user)
 
   return (
     <div className="p-6 bg-custom-light-green shadow rounded-3xl flex-1 flex flex-col">
