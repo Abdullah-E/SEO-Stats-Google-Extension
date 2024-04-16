@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import {useCookies} from "react-cookie"
+import { UserProvider } from './contexts/UserContext';
+// import {useCookies} from "react-cookie"
 
 import MainPage from './pages/MainPage';
 import DashboardPage from './pages/DashboardPage';
@@ -10,13 +11,15 @@ import { addCredits } from './api/api';
 function App() {
   
 
-  const [cookies, setCookie, getCookie] = useCookies(["user"])
+  // const [cookies, setCookie, getCookie] = useCookies(["user"])
+  
   console.log("cookies", cookies)
   // const g_id = cookies.user.id
 
   const handlePaddleEvent = (data) => {
     if(data.name == "checkout.completed") {
-
+      const {user} = useUser()
+      console.log("user frm context", user)
       console.log(data)
       const items_arr = data.data.items
       let total_credits = 0
@@ -39,12 +42,14 @@ function App() {
     eventCallback: handlePaddleEvent
   })
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
 
