@@ -1,4 +1,5 @@
 // apiUtils.js
+import { get } from "mongoose"
 import { useCookies } from "react-cookie"
 
 const API_URL = 'https://seo-stats-google-extension.onrender.com'
@@ -90,7 +91,8 @@ export const useUserCookies = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user'])
     return {
         getUserId: () => cookies.user?.id,
-        removeUserId: () => removeCookie('user')
+        removeUserId: () => removeCookie('user'),
+        getUser: () => cookies.user
     }
 }
 

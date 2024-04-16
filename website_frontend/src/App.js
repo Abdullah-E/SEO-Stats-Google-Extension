@@ -9,20 +9,13 @@ import DashboardPage from './pages/DashboardPage';
 import { addCredits, useUserCookies } from './api/api';
 
 function App() {
-  
 
-  // const [cookies, setCookie, getCookie] = useCookies(["user"])
-  
-  // console.log("cookies", cookies)
-  // const g_id = cookies.user.id
-  
-  // console.log("user in app", user)
-  const {getUserId} = useUserCookies()
+  const {getUserId, getUser} = useUserCookies()
 
   const handlePaddleEvent = (data) => {
-    // const {user} = useUser()
+
     if(data.name == "checkout.completed") {
-      // console.log("user frm context", user)
+
       console.log(data)
       const items_arr = data.data.items
       let total_credits = 0
@@ -32,10 +25,12 @@ function App() {
         total_credits += parseInt(credits) * item.quantity
         
       }
-      // const g_id = cookies.user.id
-      // console.log("g_id in paddle callback", g_id)
+
       const g_id = getUserId()
-      // addCredits( g_id, total_credits)
+      const user = getUser()
+      console.log("user", user)
+      
+
       const response = addCredits( g_id, total_credits)
       console.log("response", response)
 
