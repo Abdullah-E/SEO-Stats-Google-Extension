@@ -26,8 +26,8 @@ function App() {
             });
 
             const g_id = getUserId();
-            const user = getUser();
-            console.log("User:", user, "UserID:", g_id);
+            // const user = getUser();
+            // console.log("User:", user, "UserID:", g_id);
 
             addCredits(g_id, total_credits).then(response => {
                 console.log("Response:", response);
